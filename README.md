@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- python 3.x
+- python >= 3.9
 - pygame
 
 ## License
