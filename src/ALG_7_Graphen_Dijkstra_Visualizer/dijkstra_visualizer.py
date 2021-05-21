@@ -1,15 +1,18 @@
 """A dijkstra shortest path visualizer."""
+from queue import PriorityQueue
+
 import pygame
 
 
 class DijkstraVisualizer:
     """
-    
+
     Attributes:
         rows:
         width:
     """
     _WHITE = (255, 255, 255)
+    _GREY = (128, 128, 128)
 
     def __init__(self, rows: int = 50, width: int = 800) -> None:
         """Initializes the dijkstra visualizer."""
@@ -26,7 +29,7 @@ class DijkstraVisualizer:
         for i in range(self.rows):
             grid.append([])
             for j in range(self.rows):
-                spot = Spot(i, j, gap, self.rows)
+                spot = DijkstraVisualizer().Spot(i, j, gap, self.rows)
                 grid[i].append(spot)
 
         return grid
@@ -63,8 +66,109 @@ class DijkstraVisualizer:
 
         return row, column
 
+    def h(self, p1, p2):
+        x1, y1 = p1
+        x2, y2 = p2
+        return abs(x1 - x2) + abs(y1 - y2)
+
+    def dijkstra(self, draw, grid, start, end):
+        count = 0
+
+        open_set = PriorityQueue()
+        open_set.put((0, count, start))
+        came_from = {}
+        g_score = {spot: float("inf") for row in grid for spot in row}
+        g_score[start] = 0
+        f_score = {spot: float("inf") for row in grid for spot in row}
+        f_score[start] = self.h(start.get_pos(), end.get_pos())
+
+        open_set_hash = {start}
+
+        while not open_set.empty():
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+
+            current = open_set.get()[2]
+            open_set_hash.remove(current)
+
+            if current == end:
+                self.reconstruct_path(came_from, end, draw)
+                end.make_end()
+                return True
+
+            for neighbor in current.neighbors:
+                temp_g_score = g_score[current] + 1
+
+                if temp_g_score < g_score[neighbor]:
+                    came_from[neighbor] = current
+                    g_score[neighbor] = temp_g_score
+                    f_score[neighbor] = temp_g_score + self.h(neighbor.get_position(), end.get_position())
+                    if neighbor not in open_set_hash:
+                        count += 1
+                        open_set.put((f_score[neighbor], count, neighbor))
+                        open_set_hash.add(neighbor)
+                        neighbor.create_open()
+
+            self.draw()
+
+            if current != start:
+                current.create_closed()
+
+        return False
+
     def visualize(self):
-        pass
+        grid = self.create_grid()
+
+        start = None
+        end = None
+
+        run = True
+        while run:
+            self.draw(grid)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+
+                if pygame.mouse.get_pressed()[0]:  # LEFT
+                    pos = pygame.mouse.get_pos()
+                    row, col = self.get_position(pos)
+                    spot = grid[row][col]
+                    if not start and spot != end:
+                        start = spot
+                        self.start.create_start()
+
+                    elif not end and spot != start:
+                        end = spot
+                        end.create_end()
+
+                    elif spot != end and spot != start:
+                        spot.create_wall()
+
+                elif pygame.mouse.get_pressed()[2]:  # RIGHT
+                    pos = pygame.mouse.get_pos()
+                    row, col = self.get_position(pos)
+                    spot = grid[row][col]
+                    spot.reset()
+                    if spot == start:
+                        start = None
+                    elif spot == end:
+                        end = None
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE and start and end:
+                        for row in grid:
+                            for spot in row:
+                                spot.self.update_neighbors(grid)
+
+                        self.dijkstra(lambda: self.draw(grid), grid, start, end)
+
+                    if event.key == pygame.K_c:
+                        start = None
+                        end = None
+                        grid = self.create_grid()
+
+                pygame.quit()
 
     class Spot:
         """"""
@@ -75,7 +179,6 @@ class DijkstraVisualizer:
         _BLACK = (0, 0, 0)
         _PURPLE = (128, 0, 128)
         _ORANGE = (255, 165, 0)
-        _GREY = (128, 128, 128)
         _TURQUOISE = (64, 224, 208)
 
         def __init__(self, row: int, column: int, width: int, total_rows: int):
@@ -108,7 +211,7 @@ class DijkstraVisualizer:
             return self.color == self._TURQUOISE
 
         def reset(self):
-            self.color = self._WHITE
+            self.color = DijkstraVisualizer._WHITE
 
         def create_start(self):
             self.color = self._ORANGE
@@ -150,7 +253,11 @@ class DijkstraVisualizer:
             if self.col > 0 and not grid[self.row][self.col - 1].is_wall():
                 self.neighbors.append(grid[self.row][self.col - 1])
 
+        def __lt__(self, other):
+            return False
+
 
 # Example usage
 if __name__ == "__main__":
-    pass
+    dijkstra = DijkstraVisualizer()
+    dijkstra.visualize()
