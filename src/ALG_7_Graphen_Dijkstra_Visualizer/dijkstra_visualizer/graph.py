@@ -1,4 +1,6 @@
 """"""
+from queue import PriorityQueue
+
 from dijkstra_visualizer.spot import Spot
 
 
@@ -28,11 +30,27 @@ class Graph:
         """Creates the initial state of the grid."""
         grid = []
 
-        for i in range(self.rows):
+        for row in range(self.rows):
             grid.append([])
 
-            for j in range(self.rows):
-                spot = Spot(i, j, self.gap, self.rows)
-                grid[i].append(spot)
+            for col in range(self.rows):
+                spot = Spot(row, col, self.gap)
+                grid[row].append(spot)
 
         return grid
+
+    def create_start(self, spot: object) -> None:
+        """"""
+        spot.is_start()
+        self.start = spot
+
+    def create_destination(self, spot: object) -> None:
+        """"""
+        spot.is_destination()
+        self.destination = spot
+
+    def dijkstra(self, gui: object) -> None:
+        """"""
+        prev = {}
+        distance = {}
+        queue = PriorityQueue()

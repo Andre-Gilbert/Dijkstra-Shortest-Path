@@ -32,20 +32,43 @@ class GUI:
     def draw_grid(self) -> None:
         """Draws the lines of the grid."""
         for i in range(self.rows):
-            pygame.draw.line(self.window)
+            pygame.draw.line(self.window, Colour._GREY, (0, i * self.gap), (self.width, i * self.gap))
 
             for j in range(self.cols):
-                pygame.draw.line(self.window)
+                pygame.draw.line(self.window, Colour._GREY, (j * self.gap, 0), (j * self.gap, self.width))
 
     def draw(self) -> None:
         """Draws the cells of the grid."""
         self.window.fill(Colour._WHITE)
+
+        for row in self.graph.grid:
+            for spot in row:
+                pygame.draw.rect(self.window, spot.colour, (spot.x, spot.y, self.gap, self.gap))
+
+        pygame.display.update()
 
     def handle_events(self) -> bool:
         """Handles mouse and key events."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
+
+            # Left mouse button
+            if pygame.mouse.get_pressed()[0]:
+                position = pygame.mouse.get_pos()
+                row, col = self.get_position(position)
+                spot = self.graph.grid[row][col]
+
+                if not self.graph.start and spot != self.graph.destination:
+                    self.graph.create_start(spot)
+
+                elif not self.graph.destination and spot != self.graph.start:
+                    self.graph.create_destination(spot)
+
+                elif spot != self.graph.destination and spot != self.graph.start:
+                    spot.create_wall()
+
+        return True
 
     def run(self) -> None:
         """Main loop of the GUI."""
@@ -57,3 +80,6 @@ class GUI:
     def get_position(self, position: tuple[int, int]) -> tuple[int, int]:
         """Gets the position of the cell which was clicked."""
         x, y = position
+        row = y // self.gap
+        col = x // self.gap
+        return row, col
