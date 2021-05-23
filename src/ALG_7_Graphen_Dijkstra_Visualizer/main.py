@@ -1,7 +1,7 @@
 """"""
-from dijkstra_visualizer.gui import GUI
+from dijkstra_visualizer.dijkstra import DijkstraVisualizer
 
 # Example usage
 if __name__ == "__main__":
-    window = GUI(50, 800)
-    window.run()
+    dijkstra = DijkstraVisualizer(50, 800)
+    dijkstra.run()
