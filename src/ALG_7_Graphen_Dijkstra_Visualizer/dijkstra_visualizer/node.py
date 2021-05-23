@@ -69,6 +69,18 @@ class Node:
         """"""
         self.colour = self._PURPLE
 
+    def make_visited(self) -> None:
+        """"""
+        self.colour = self._RED
+
+    def make_visiting(self) -> None:
+        """"""
+        self.colour = self._GREEN
+
+    def reset_node(self) -> None:
+        """"""
+        self.colour = self._WHITE
+
     def draw(self, window) -> None:
         """"""
         pygame.draw.rect(window, self.colour, (self.x, self.y, self.width, self.width))

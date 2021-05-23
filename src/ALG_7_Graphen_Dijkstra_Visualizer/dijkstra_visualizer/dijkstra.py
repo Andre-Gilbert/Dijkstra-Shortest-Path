@@ -50,7 +50,7 @@ class DijkstraVisualizer:
 
         return grid
 
-    def dijkstra(self) -> bool:
+    def dijkstra(self) -> None:
         """"""
         visited = {node: False for row in self.graph for node in row}
         distance = {node: float("inf") for row in self.graph for node in row}
@@ -60,10 +60,6 @@ class DijkstraVisualizer:
         queue.put((0, self.start))
 
         while not queue.empty():
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-
             current = queue.get()[1]
 
             if visited[current]:
@@ -71,27 +67,23 @@ class DijkstraVisualizer:
 
             visited[current] = True
 
-            if current == self.destination:
-                self.reconstruct_path(came_from, current)
-                return True
+            if current != self.start and current != self.destination:
+                current.is_closed()
 
-            if current != self.start:
-                current.make_visited()
+            elif current == self.destination:
+                self.reconstruct_path(came_from, current)
+                break
 
             for neighbour in current.neighbours:
                 weight = 1
-
                 if distance[current] + weight < distance[neighbour]:
                     came_from[neighbour] = current
-                    distance[neighbour] = distance[current] + 1
+                    distance[neighbour] = distance[current] + weight
                     queue.put((distance[neighbour], neighbour))
-
-                elif neighbour != self.destination and neighbour != self.start and not visited[neighbour]:
-                    neighbour.make_visiting()
+                if neighbour != self.destination and neighbour != self.start and not visited[neighbour]:
+                    neighbour.makeVisiting()
 
             self.draw()
-
-        return False
 
     def reconstruct_path(self, came_from: dict, current: Node) -> None:
         """"""
@@ -108,7 +100,7 @@ class DijkstraVisualizer:
 
     def draw(self) -> None:
         """"""
-        self.window.fill(self._WHITE)
+        # self.window.fill(self._WHITE)
 
         for row in self.graph:
             for node in row:
@@ -129,22 +121,24 @@ class DijkstraVisualizer:
             if event.type == pygame.QUIT:
                 return False
 
+            # Left click
             if pygame.mouse.get_pressed()[0]:
                 position = pygame.mouse.get_pos()
                 row, col = self.get_clicked_position(position)
                 node = self.graph[row][col]
 
-                if not self.start and node != self.start:
+                if not self.start and node != self.destination:
                     self.start = node
                     self.start.make_start_node()
 
-                elif not self.destination and node != self.destination:
+                elif not self.destination and node != self.start:
                     self.destination = node
                     self.destination.make_destination_node()
 
                 elif node != self.start and node != self.destination:
                     node.make_wall()
 
+            # Right click
             elif pygame.mouse.get_pressed()[2]:
                 position = pygame.mouse.get_pos()
                 row, col = self.get_clicked_position(position)
@@ -165,7 +159,7 @@ class DijkstraVisualizer:
 
                     self.dijkstra()
 
-                if event.key == pygame.K_c:
+                elif event.key == pygame.K_c:
                     self.start = None
                     self.destination = None
                     self.graph = self.__initialize_grid()
