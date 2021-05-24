@@ -7,10 +7,10 @@ from node import Node
 
 
 class Pathfinder:
-    """Class
+    """Class which implements the pathfinding algorithms.
 
     Attributes:
-        grid:
+        grid: A 2D array containing nodes.
         start: The start node.
         destination: The destination node.
     """
@@ -26,15 +26,15 @@ class Pathfinder:
         distance = {node: float("inf") for row in self.__grid for node in row}
         distance[self.__start] = 0
         came_from = {}
-        priority_queue = PriorityQueue()
-        priority_queue.put((0, self.__start))
+        queue = PriorityQueue()
+        queue.put((0, self.__start))
 
-        while not priority_queue.empty():
+        while not queue.empty():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
-            current = priority_queue.get()[1]
+            current = queue.get()[1]
 
             if visited[current]:
                 continue
@@ -42,11 +42,12 @@ class Pathfinder:
             visited[current] = True
 
             if current == self.__destination:
-                self.__reconstruct_path(gui, came_from)
+                self.__reconstruct_path(gui, came_from, self.__destination)
+                self.__start.make_start()
                 return True
 
             if current != self.__start:
-                current.makeVisited()
+                current.visited()
 
             for neighbor in current.neighbors:
                 weight = 1
@@ -54,10 +55,10 @@ class Pathfinder:
                 if distance[current] + weight < distance[neighbor]:
                     came_from[neighbor] = current
                     distance[neighbor] = distance[current] + weight
-                    priority_queue.put((distance[neighbor], neighbor))
+                    queue.put((distance[neighbor], neighbor))
 
                 elif neighbor != self.__destination and neighbor != self.__start and not visited[neighbor]:
-                    neighbor.makeVisiting()
+                    neighbor.visiting()
 
             gui.draw(self.__grid)
 
@@ -66,56 +67,65 @@ class Pathfinder:
     def a_star_search(self, gui: object) -> bool:
         """Visualizes the A* search algorithm."""
         count = 0
-        priority_queue = PriorityQueue()
-        priority_queue.put((0, count, self.__start))
-        came_from = {}
+        queue = PriorityQueue()
+        queue.put((0, count, self.__start))
+
         g_score = {node: float("inf") for row in self.__grid for node in row}
         g_score[self.__start] = 0
         f_score = {node: float("inf") for row in self.__grid for node in row}
-        f_score[self.__start] = self.__heuristic(self.__start.get_position(), self.__destination.get_position())
-        open_set = {self.__start}
+        f_score[self.__start] = self.__manhatten_distance(self.__start.get_position(),
+                                                          self.__destination.get_position())
 
-        while not priority_queue.empty():
+        open_set = {self.__start}
+        came_from = {}
+
+        while not queue.empty():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
-            current = priority_queue.get()[2]
+            current = queue.get()[2]
             open_set.remove(current)
 
             if current == self.__destination:
-                self.__reconstruct_path(gui, came_from)
+                self.__reconstruct_path(gui, came_from, self.__destination)
+                self.__start.make_start()
                 return True
 
             for neighbor in current.neighbors:
                 temp_g_score = g_score[current] + 1
+
                 if temp_g_score < g_score[neighbor]:
                     came_from[neighbor] = current
                     g_score[neighbor] = temp_g_score
-                    f_score[neighbor] = (temp_g_score +
-                                         self.__heuristic(neighbor.get_position(), self.__destination.get_position()))
+                    f_score[neighbor] = temp_g_score + self.__manhatten_distance(neighbor.get_position(),
+                                                                                 self.__destination.get_position())
+
                     if neighbor not in open_set:
                         count += 1
-                        priority_queue.put((f_score[neighbor], count, neighbor))
+                        queue.put((f_score[neighbor], count, neighbor))
                         open_set.add(neighbor)
+
                         if neighbor != self.__destination:
                             neighbor.visiting()
 
+            # Redraw the grid
             gui.draw(self.__grid)
+
             if current != self.__start:
                 current.visited()
 
         return False
 
-    def __heuristic(self, start, end) -> int:
-        """"""
-        x1, y1 = start
-        x2, y2 = end
+    def __manhatten_distance(self, current: Node, destination: Node) -> int:
+        """Computes the manhatten distance to the destination."""
+        x1, y1 = current
+        x2, y2 = destination
         return abs(x1 - x2) + abs(y1 - y2)
 
-    def __reconstruct_path(self, gui: object, came_from: dict[Node, Node]) -> None:
+    def __reconstruct_path(self, gui: object, came_from: dict[Node, Node], current: Node) -> None:
         """Reconstructs the shortest path."""
-        while self.__destination in came_from:
-            current = came_from[self.__destination]
+        while current in came_from:
+            current = came_from[current]
             current.make_path()
             gui.draw(self.__grid)

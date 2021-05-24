@@ -22,7 +22,7 @@ class Node:
     __ORANGE = (255, 165, 0)
     __CYAN = (0, 255, 255)
 
-    def __init__(self, row, col, width, total_rows):
+    def __init__(self, row: int, col: int, width: int, total_rows: int) -> None:
         """Initializes a node in the grid."""
         self.row = row
         self.col = col
@@ -34,6 +34,7 @@ class Node:
         self.total_rows = total_rows
 
     def get_position(self):
+        """Returns the position of the node."""
         return self.row, self.col
 
     def is_closed(self):
@@ -57,10 +58,10 @@ class Node:
     def reset_node(self):
         self.color = self.__WHITE
 
-    def make_start_node(self):
+    def make_start(self):
         self.color = self.__ORANGE
 
-    def make_destination_node(self):
+    def make_destination(self):
         self.color = self.__CYAN
 
     def visited(self):
