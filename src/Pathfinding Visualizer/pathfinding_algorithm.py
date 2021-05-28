@@ -10,9 +10,9 @@ class Pathfinder:
     """Class which implements the pathfinding algorithms.
 
     Attributes:
-        grid: A 2D array containing nodes.
-        start: The start node.
-        destination: The destination node.
+        __grid: A 2D array containing nodes.
+        __start: The start node.
+        __destination: The destination node.
     """
     def __init__(self, grid: list[list[Node]], start: Node, destination: Node) -> None:
         """Initializes the pathfinder."""
@@ -21,7 +21,14 @@ class Pathfinder:
         self.__destination = destination
 
     def dijkstra(self, gui: object) -> bool:
-        """Visualizes Dijkstra's shortest path algorithm."""
+        """Visualizes Dijkstra's shortest path algorithm.
+
+        Args:
+            gui: The grid object.
+
+        Returns:
+            True if the shortest path is found, False otherwise.
+        """
         visited = {node: False for row in self.__grid for node in row}
         distance = {node: float("inf") for row in self.__grid for node in row}
         distance[self.__start] = 0
@@ -65,7 +72,14 @@ class Pathfinder:
         return False
 
     def a_star_search(self, gui: object) -> bool:
-        """Visualizes the A* search algorithm."""
+        """Visualizes the A* search algorithm.
+
+        Args:
+            gui: The grid object.
+
+        Returns:
+            True if the shortest path is found, False otherwise.
+        """
         count = 0
         queue = PriorityQueue()
         queue.put((0, count, self.__start))
@@ -118,13 +132,28 @@ class Pathfinder:
         return False
 
     def __manhatten_distance(self, current: Node, destination: Node) -> int:
-        """Computes the manhatten distance to the destination."""
+        """Computes the manhatten distance to the destination.
+
+        Args:
+            current: The current node we're considering.
+            destination: The destination node.
+
+        Returns:
+            The absolute distance of the x-Coordinate and
+            the y-Coordinate of the current node to the destination.
+        """
         x1, y1 = current
         x2, y2 = destination
         return abs(x1 - x2) + abs(y1 - y2)
 
     def __reconstruct_path(self, gui: object, came_from: dict[Node, Node], current: Node) -> None:
-        """Reconstructs the shortest path."""
+        """Reconstructs the shortest path.
+
+        Args:
+            gui: The gui object.
+            came_from: A dictionary containing the shortest path.
+            current: The current node we're considering.
+        """
         while current in came_from:
             current = came_from[current]
             current.make_path()

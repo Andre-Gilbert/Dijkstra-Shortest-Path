@@ -3,8 +3,8 @@ import pygame
 
 
 class Node:
-    """Class which represents a node/cell in the grid.
-    
+    """Class which represents a node (cell) in the grid.
+
     Attributes:
         row: Row of the node.
         col: Column of the node.
@@ -33,7 +33,7 @@ class Node:
         self.neighbors = []
         self.total_rows = total_rows
 
-    def get_position(self):
+    def get_position(self) -> tuple[int, int]:
         """Returns the position of the node."""
         return self.row, self.col
 
@@ -46,7 +46,8 @@ class Node:
     def is_visiting(self):
         return self.color == self.__GREEN
 
-    def is_wall(self):
+    def is_wall(self) -> bool:
+        """Checks whether the node is a wall."""
         return self.color == self.__BLACK
 
     def is_start(self):
@@ -79,7 +80,12 @@ class Node:
     def draw(self, window):
         pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.width))
 
-    def update_neighbors(self, grid):
+    def update_neighbors(self, grid: list[list[object]]) -> None:
+        """Updates all neighbors of a node.
+
+        Args:
+            grid: The grid containing node objects.
+        """
         self.neighbors = []
 
         if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_wall():  # DOWN

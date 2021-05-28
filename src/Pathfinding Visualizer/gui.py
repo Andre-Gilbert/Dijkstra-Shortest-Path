@@ -16,7 +16,7 @@ class GUI:
     """
     __GREY = (128, 128, 128)
 
-    def __init__(self, rows, width) -> None:
+    def __init__(self, rows: int, width: int) -> None:
         """Initializes the graphical user interface."""
         if not isinstance(rows, int) or not isinstance(width, int):
             raise TypeError("Inputs must be integers.")
