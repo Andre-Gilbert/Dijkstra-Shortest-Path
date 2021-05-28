@@ -57,24 +57,31 @@ class Node:
         return self.color == self.__CYAN
 
     def reset_node(self):
+        """Resets the node."""
         self.color = self.__WHITE
 
     def make_start(self):
+        """Creates the start node."""
         self.color = self.__ORANGE
 
     def make_destination(self):
+        """Creates the end node."""
         self.color = self.__CYAN
 
     def visited(self):
+        """Visited nodes."""
         self.color = self.__RED
 
     def visiting(self):
+        """Currently visiting."""
         self.color = self.__GREEN
 
     def make_wall(self):
+        """Creates a wall."""
         self.color = self.__BLACK
 
     def make_path(self):
+        """Creates a path."""
         self.color = self.__PURPLE
 
     def draw(self, window):

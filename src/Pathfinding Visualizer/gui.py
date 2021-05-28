@@ -5,7 +5,7 @@ from pathfinding_algorithm import Pathfinder
 
 
 class GUI:
-    """
+    """Class which implements the user interface.
 
     Attributes:
         __gap: The width of a node.
@@ -17,7 +17,11 @@ class GUI:
     __GREY = (128, 128, 128)
 
     def __init__(self, rows: int, width: int) -> None:
-        """Initializes the graphical user interface."""
+        """Initializes the graphical user interface.
+
+        Raises:
+            TypeError: If rows or width are not of type int.
+        """
         if not isinstance(rows, int) or not isinstance(width, int):
             raise TypeError("Inputs must be integers.")
 
@@ -29,7 +33,11 @@ class GUI:
         pygame.display.set_caption("Pathfinding Visualizer")
 
     def __initialize_grid(self) -> list[list[Node]]:
-        """Initializes an empty grid."""
+        """Initializes an empty grid.
+
+        Returns:
+            A 2D array containing all of the nodes in the grid.
+        """
         grid = []
 
         for row in range(self.__rows):
@@ -41,7 +49,7 @@ class GUI:
         return grid
 
     def draw(self, grid: list[list[Node]]) -> None:
-        """"""
+        """Draws the nodes."""
         for row in grid:
             for node in row:
                 node.draw(self.__window)
@@ -50,19 +58,26 @@ class GUI:
         pygame.display.update()
 
     def __draw_lines(self) -> None:
-        """"""
+        """Draws the grid lines."""
         for i in range(self.__rows):
             pygame.draw.line(self.__window, self.__GREY, (0, i * self.__gap), (self.__width, i * self.__gap))
             pygame.draw.line(self.__window, self.__GREY, (i * self.__gap, 0), (i * self.__gap, self.__width))
 
     def __get_clicked_position(self, position: tuple[int, int]) -> tuple[int, int]:
-        """"""
+        """Gets the clicked position.
+
+        Args:
+            position: x-, y-Coordinate of the position.
+
+        Returns:
+            The row and column of the node.
+        """
         x, y = position
         row, col = x // self.__gap, y // self.__gap
         return row, col
 
     def run(self) -> None:
-        """"""
+        """Main loop of the gui."""
         run = True
         started = False
         start = destination = None
@@ -77,7 +92,7 @@ class GUI:
                 if started:
                     continue
 
-                # Left mouse click
+                # Left click
                 if pygame.mouse.get_pressed()[0]:
                     position = pygame.mouse.get_pos()
                     row, column = self.__get_clicked_position(position)
@@ -94,6 +109,7 @@ class GUI:
                     elif node != start and node != destination:
                         node.make_wall()
 
+                # Right click
                 elif pygame.mouse.get_pressed()[2]:
                     position = pygame.mouse.get_pos()
                     row, column = self.__get_clicked_position(position)
@@ -109,10 +125,12 @@ class GUI:
                 # Initialize the pathfinder
                 pathfinder = Pathfinder(grid, start, destination)
 
-                # Key event
                 if event.type == pygame.KEYDOWN:
+
+                    # Dijkstra
                     if event.key == pygame.K_d and not started:
                         started = True
+
                         for row in grid:
                             for node in row:
                                 node.update_neighbors(grid)
@@ -120,8 +138,10 @@ class GUI:
                         pathfinder.dijkstra(self)
                         started = False
 
+                    # A* search
                     elif event.key == pygame.K_a and not started:
                         started = True
+
                         for row in grid:
                             for node in row:
                                 node.update_neighbors(grid)
@@ -129,9 +149,9 @@ class GUI:
                         pathfinder.a_star_search(self)
                         started = False
 
+                    # Reset grid
                     elif event.key == pygame.K_c:
-                        start = None
-                        destination = None
+                        start = destination = None
                         grid = self.__initialize_grid()
                         self.draw(grid)
 
