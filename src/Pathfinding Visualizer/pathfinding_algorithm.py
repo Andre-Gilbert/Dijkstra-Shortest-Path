@@ -1,5 +1,6 @@
 """"""
 from queue import PriorityQueue
+from random import randrange
 
 import pygame
 
@@ -130,6 +131,15 @@ class Pathfinder:
                 current.visited()
 
         return False
+
+    def generate_maze(self) -> None:
+        """"""
+        for i in range(1000):
+
+            row = randrange(len(self.__grid))
+            col = randrange(len(self.__grid))
+
+            self.__grid[row][col].make_wall()
 
     def __manhatten_distance(self, current: Node, destination: Node) -> int:
         """Computes the manhatten distance to the destination.

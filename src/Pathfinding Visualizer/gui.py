@@ -98,11 +98,11 @@ class GUI:
                     row, column = self.__get_clicked_position(position)
                     node = grid[row][column]
 
-                    if not start and node != destination:
+                    if not start and node != destination and not node.is_wall():
                         start = node
                         start.make_start()
 
-                    elif not destination and node != start:
+                    elif not destination and node != start and not node.is_wall():
                         destination = node
                         destination.make_destination()
 
@@ -148,6 +148,10 @@ class GUI:
 
                         pathfinder.a_star_search(self)
                         started = False
+
+                    # Generate maze
+                    elif event.key == pygame.K_m and not started:
+                        pathfinder.generate_maze()
 
                     # Reset grid
                     elif event.key == pygame.K_c:
