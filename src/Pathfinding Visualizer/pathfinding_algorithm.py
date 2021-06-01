@@ -134,10 +134,13 @@ class Pathfinder:
 
     def generate_maze(self) -> None:
         """"""
-        for i in range(1000):
+        for i in range(len(self.__grid) * 15):
 
             row = randrange(len(self.__grid))
             col = randrange(len(self.__grid))
+
+            if self.__grid[row][col] == self.__start or self.__grid[row][col] == self.__destination:
+                continue
 
             self.__grid[row][col].make_wall()
 
