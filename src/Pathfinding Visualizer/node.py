@@ -6,13 +6,13 @@ class Node:
     """Class which represents a node (cell) in the grid.
 
     Attributes:
-        row: Row of the node.
-        col: Column of the node.
-        x: x-Coordinate of the node in the grid.
-        y: y-Coordinate of the node in the grid.
-        width: Width of the node.
         neighbors: Neighbors of the node.
-        total_rows: Total rows of the grid.
+        __row: Row of the node.
+        __col: Column of the node.
+        __x: x-Coordinate of the node in the grid.
+        __y: y-Coordinate of the node in the grid.
+        __width: Width of the node.
+        __total_rows: Total rows of the grid.
     """
     __RED = (255, 0, 0)
     __GREEN = (0, 255, 0)
@@ -24,68 +24,69 @@ class Node:
 
     def __init__(self, row: int, col: int, width: int, total_rows: int) -> None:
         """Initializes a node in the grid."""
-        self.row = row
-        self.col = col
-        self.x = row * width
-        self.y = col * width
-        self.color = self.__WHITE
-        self.width = width
         self.neighbors = []
-        self.total_rows = total_rows
+        self.__row = row
+        self.__col = col
+        self.__x = row * width
+        self.__y = col * width
+        self.__color = self.__WHITE
+        self.__width = width
+        self.__total_rows = total_rows
 
     def get_position(self) -> tuple[int, int]:
         """Returns the position of the node."""
-        return self.row, self.col
+        return self.__row, self.__col
 
-    def is_closed(self):
-        return self.color == self.__RED
+    # def is_closed(self):
+    #    return self.__color == self.__RED
 
-    def is_open(self):
-        return self.color == self.__GREEN
+    # def is_open(self):
+    #    return self.__color == self.__GREEN
 
-    def is_visiting(self):
-        return self.color == self.__GREEN
+    # def is_visiting(self):
+    #    return self.__color == self.__GREEN
 
     def is_wall(self) -> bool:
         """Checks whether the node is a wall."""
-        return self.color == self.__BLACK
+        return self.__color == self.__BLACK
 
     def is_start(self):
-        return self.color == self.__ORANGE
+        return self.__color == self.__ORANGE
 
     def is_destination(self):
-        return self.color == self.__CYAN
+        return self.__color == self.__CYAN
 
     def reset_node(self):
         """Resets the node."""
-        self.color = self.__WHITE
+        self.__color = self.__WHITE
 
     def make_start(self):
         """Creates the start node."""
-        self.color = self.__ORANGE
+        self.__color = self.__ORANGE
 
     def make_destination(self):
         """Creates the end node."""
-        self.color = self.__CYAN
+        self.__color = self.__CYAN
 
-    def visited(self):
-        """Visited nodes."""
-        self.color = self.__RED
+    def make_visited(self):
+        """Visited node."""
+        self.__color = self.__RED
 
-    def visiting(self):
+    def make_visiting(self):
         """Currently visiting."""
-        self.color = self.__GREEN
+        self.__color = self.__GREEN
 
     def make_wall(self):
         """Creates a wall."""
-        self.color = self.__BLACK
+        self.__color = self.__BLACK
 
     def make_path(self):
         """Creates a path."""
-        self.color = self.__PURPLE
+        self.__color = self.__PURPLE
 
     def draw(self, window):
-        pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.width))
+        """Draws the node."""
+        pygame.draw.rect(window, self.__color, (self.__x, self.__y, self.__width, self.__width))
 
     def update_neighbors(self, grid: list[list[object]]) -> None:
         """Updates all neighbors of a node.
@@ -95,17 +96,22 @@ class Node:
         """
         self.neighbors = []
 
-        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_wall():  # DOWN
-            self.neighbors.append(grid[self.row + 1][self.col])
+        # Node below
+        if self.__row < self.__total_rows - 1 and not grid[self.__row + 1][self.__col].is_wall():
+            self.neighbors.append(grid[self.__row + 1][self.__col])
 
-        if self.row > 0 and not grid[self.row - 1][self.col].is_wall():  # UP
-            self.neighbors.append(grid[self.row - 1][self.col])
+        # Node above
+        if self.__row > 0 and not grid[self.__row - 1][self.__col].is_wall():
+            self.neighbors.append(grid[self.__row - 1][self.__col])
 
-        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_wall():  # RIGHT
-            self.neighbors.append(grid[self.row][self.col + 1])
+        # Node to the right
+        if self.__col < self.__total_rows - 1 and not grid[self.__row][self.__col + 1].is_wall():
+            self.neighbors.append(grid[self.__row][self.__col + 1])
 
-        if self.col > 0 and not grid[self.row][self.col - 1].is_wall():  # LEFT
-            self.neighbors.append(grid[self.row][self.col - 1])
+        # Node to the left
+        if self.__col > 0 and not grid[self.__row][self.__col - 1].is_wall():
+            self.neighbors.append(grid[self.__row][self.__col - 1])
 
-    def __lt__(self, other):
+    def __lt__(self, other: object):
+        """Less than comparison of two nodes."""
         return False
