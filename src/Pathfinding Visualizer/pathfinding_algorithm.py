@@ -55,7 +55,7 @@ class Pathfinder:
                 return True
 
             if current != self.__start:
-                current.visited()
+                current.make_visited()
 
             for neighbor in current.neighbors:
                 weight = 1
@@ -66,7 +66,7 @@ class Pathfinder:
                     queue.put((distance[neighbor], neighbor))
 
                 elif neighbor != self.__destination and neighbor != self.__start and not visited[neighbor]:
-                    neighbor.visiting()
+                    neighbor.make_visiting()
 
             gui.draw(self.__grid)
 
@@ -122,13 +122,13 @@ class Pathfinder:
                         open_set.add(neighbor)
 
                         if neighbor != self.__destination:
-                            neighbor.visiting()
+                            neighbor.make_visiting()
 
             # Redraw the grid
             gui.draw(self.__grid)
 
             if current != self.__start:
-                current.visited()
+                current.make_visited()
 
         return False
 

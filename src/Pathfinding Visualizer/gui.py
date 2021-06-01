@@ -1,3 +1,4 @@
+""""""
 import pygame
 
 from node import Node
@@ -85,12 +86,14 @@ class GUI:
 
         while run:
             self.draw(grid)
+
+            # Handle events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
 
-                if started:
-                    continue
+                #if started:
+                #    continue
 
                 # Left click
                 if pygame.mouse.get_pressed()[0]:
@@ -136,7 +139,6 @@ class GUI:
                                 node.update_neighbors(grid)
 
                         pathfinder.dijkstra(self)
-                        started = False
 
                     # A* search
                     elif event.key == pygame.K_a and not started:
@@ -147,7 +149,6 @@ class GUI:
                                 node.update_neighbors(grid)
 
                         pathfinder.a_star_search(self)
-                        started = False
 
                     # Generate maze
                     elif event.key == pygame.K_m and not started:
@@ -155,6 +156,7 @@ class GUI:
 
                     # Reset grid
                     elif event.key == pygame.K_c:
+                        started = False
                         start = destination = None
                         grid = self.__initialize_grid()
                         self.draw(grid)
