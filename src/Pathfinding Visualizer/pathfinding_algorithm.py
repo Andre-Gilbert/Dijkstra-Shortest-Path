@@ -4,18 +4,18 @@ from random import randrange
 
 import pygame
 
-from node import Node
+from vertex import Vertex
 
 
 class Pathfinder:
     """Class which implements the pathfinding algorithms.
 
     Attributes:
-        __grid: A 2D array containing nodes.
-        __start: The start node.
-        __destination: The destination node.
+        __grid: A 2D array containing vertices.
+        __start: The start vertex.
+        __destination: The destination vertex.
     """
-    def __init__(self, grid: list[list[Node]], start: Node, destination: Node) -> None:
+    def __init__(self, grid: list[list[Vertex]], start: Vertex, destination: Vertex) -> None:
         """Initializes the pathfinder."""
         self.__grid = grid
         self.__start = start
@@ -134,7 +134,9 @@ class Pathfinder:
 
     def generate_maze(self) -> None:
         """"""
-        for i in range(len(self.__grid) * 15):
+        n = round(len(self.__grid) * len(self.__grid) * 0.25)
+
+        for i in range(n + 1):
 
             row = randrange(len(self.__grid))
             col = randrange(len(self.__grid))
@@ -144,28 +146,28 @@ class Pathfinder:
 
             self.__grid[row][col].make_wall()
 
-    def __manhatten_distance(self, current: Node, destination: Node) -> int:
+    def __manhatten_distance(self, current: Vertex, destination: Vertex) -> int:
         """Computes the manhatten distance to the destination.
 
         Args:
-            current: The current node we're considering.
-            destination: The destination node.
+            current: The current vertex we're considering.
+            destination: The destination vertex.
 
         Returns:
             The absolute distance of the x-Coordinate and
-            the y-Coordinate of the current node to the destination.
+            the y-Coordinate of the current vertex to the destination.
         """
         x1, y1 = current
         x2, y2 = destination
         return abs(x1 - x2) + abs(y1 - y2)
 
-    def __reconstruct_path(self, gui: object, came_from: dict[Node, Node], current: Node) -> None:
+    def __reconstruct_path(self, gui: object, came_from: dict[Vertex, Vertex], current: Vertex) -> None:
         """Reconstructs the shortest path.
 
         Args:
             gui: The gui object.
             came_from: A dictionary containing the shortest path.
-            current: The current node we're considering.
+            current: The current vertex we're considering.
         """
         while current in came_from:
             current = came_from[current]

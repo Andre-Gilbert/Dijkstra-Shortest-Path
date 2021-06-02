@@ -1,8 +1,10 @@
 """"""
+from tkinter import Tk, messagebox
+
 import pygame
 
-from node import Node
 from pathfinding_algorithm import Pathfinder
+from vertex import Vertex
 
 
 class GUI:
@@ -33,11 +35,11 @@ class GUI:
         self.__window = pygame.display.set_mode((width, width))
         pygame.display.set_caption("Pathfinding Visualizer")
 
-    def __initialize_grid(self) -> list[list[Node]]:
+    def __initialize_grid(self) -> list[list[Vertex]]:
         """Initializes an empty grid.
 
         Returns:
-            A 2D array containing all of the nodes in the grid.
+            A 2D array containing all of the vertices in the grid.
         """
         grid = []
 
@@ -45,12 +47,12 @@ class GUI:
             grid.append([])
 
             for col in range(self.__cols):
-                grid[row].append(Node(row, col, self.__gap, self.__rows))
+                grid[row].append(Vertex(row, col, self.__gap, self.__rows))
 
         return grid
 
-    def draw(self, grid: list[list[Node]]) -> None:
-        """Draws the nodes."""
+    def draw(self, grid: list[list[Vertex]]) -> None:
+        """Draws the vertices."""
         for row in grid:
             for node in row:
                 node.draw(self.__window)
@@ -71,7 +73,7 @@ class GUI:
             position: x-, y-Coordinate of the position.
 
         Returns:
-            The row and column of the node.
+            The row and column of the vertex.
         """
         x, y = position
         row, col = x // self.__gap, y // self.__gap
@@ -91,9 +93,6 @@ class GUI:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
-
-                #if started:
-                #    continue
 
                 # Left click
                 if pygame.mouse.get_pressed()[0]:
@@ -129,6 +128,9 @@ class GUI:
                 pathfinder = Pathfinder(grid, start, destination)
 
                 if event.type == pygame.KEYDOWN:
+                    if started:
+                        Tk().wm_withdraw()
+                        messagebox.showwarning("Warning Example", "Warning MessageBox")
 
                     # Dijkstra
                     if event.key == pygame.K_d and not started:
