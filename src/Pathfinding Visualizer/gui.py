@@ -108,7 +108,7 @@ class GUI:
                         destination = node
                         destination.make_destination()
 
-                    elif node != start and node != destination:
+                    elif node != start and node != destination and not started:
                         node.make_wall()
 
                 # Right click
@@ -128,9 +128,19 @@ class GUI:
                 pathfinder = Pathfinder(grid, start, destination)
 
                 if event.type == pygame.KEYDOWN:
-                    if started:
+                    if started and event.key != pygame.K_c:
                         Tk().wm_withdraw()
-                        messagebox.showwarning("Warning Example", "Warning MessageBox")
+                        user_input = messagebox.askyesno("Reset Grid", "Do you want to reset the grid?")
+
+                        # Yes
+                        if user_input:
+                            started = False
+                            start = destination = None
+                            grid = self.__initialize_grid()
+                            self.draw(grid)
+                            continue
+                        else:
+                            messagebox.showwarning('Warning', 'Reset the grid before running an algorithm.')
 
                     # Dijkstra
                     if event.key == pygame.K_d and not started:
