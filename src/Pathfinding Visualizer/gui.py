@@ -17,7 +17,7 @@ class GUI:
         __width: The width of the interface.
         __window: The graphical user interface.
     """
-    __GREY = (128, 128, 128)
+    __GREY = (175, 216, 248)
 
     def __init__(self, rows: int, width: int) -> None:
         """Initializes the graphical user interface.
@@ -141,14 +141,15 @@ class GUI:
                             continue
                         else:
                             messagebox.showwarning('Warning', 'Reset the grid before running an algorithm.')
+                            continue
 
                     # Dijkstra
                     if event.key == pygame.K_d and not started:
                         started = True
 
                         for row in grid:
-                            for node in row:
-                                node.update_neighbors(grid)
+                            for vertex in row:
+                                vertex.update_neighbors(grid)
 
                         pathfinder.dijkstra(self)
 
@@ -157,8 +158,8 @@ class GUI:
                         started = True
 
                         for row in grid:
-                            for node in row:
-                                node.update_neighbors(grid)
+                            for vertex in row:
+                                vertex.update_neighbors(grid)
 
                         pathfinder.a_star_search(self)
 
