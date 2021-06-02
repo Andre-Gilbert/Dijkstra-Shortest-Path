@@ -12,11 +12,6 @@ class Vertex:
             if self == edge.start:
                 self.adjacent_edges.add(edge)
 
-    def get_distance(self, destination: Vertex) -> int:
-        for edge in self.adjacent_edges:
-            if destination == edge.destination:
-                return edge.cost
-
 
 class Edge:
     def __init__(self, start: Vertex, destination: Vertex, cost: int) -> None:
