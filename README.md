@@ -2,9 +2,11 @@
 
 ## Meet the Algorithms
 
-**Dijkstra** (weighted): The OG guarantees the shortest path
+**Dijkstra** (weighted): <br/>
+The OG which guarantees the shortest path.
 
-<b>A\* Search</b> (weighted): Arguably the best pathfinding algorithm which uses heuristics to guarantee the shortest path much faster than Dijkstra's Shortest Path
+<b>A\* Search</b> (weighted): <br/>
+Arguably the best pathfinding algorithm which uses heuristics to guarantee the shortest path much faster than Dijkstra's Shortest Path.
 
 ## Usage
 
