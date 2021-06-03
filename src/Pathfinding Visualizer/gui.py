@@ -17,7 +17,7 @@ class GUI:
         __width: The width of the interface.
         __window: The graphical user interface.
     """
-    __GREY = (175, 216, 248)
+    __LIGHT_BLUE = (175, 216, 248)
 
     def __init__(self, rows: int, width: int) -> None:
         """Initializes the graphical user interface.
@@ -63,8 +63,8 @@ class GUI:
     def __draw_lines(self) -> None:
         """Draws the grid lines."""
         for i in range(self.__rows):
-            pygame.draw.line(self.__window, self.__GREY, (0, i * self.__gap), (self.__width, i * self.__gap))
-            pygame.draw.line(self.__window, self.__GREY, (i * self.__gap, 0), (i * self.__gap, self.__width))
+            pygame.draw.line(self.__window, self.__LIGHT_BLUE, (0, i * self.__gap), (self.__width, i * self.__gap))
+            pygame.draw.line(self.__window, self.__LIGHT_BLUE, (i * self.__gap, 0), (i * self.__gap, self.__width))
 
     def __get_clicked_position(self, position: tuple[int, int]) -> tuple[int, int]:
         """Gets the clicked position.
@@ -138,13 +138,11 @@ class GUI:
                             start = destination = None
                             grid = self.__initialize_grid()
                             self.draw(grid)
-                            continue
                         else:
                             messagebox.showwarning('Warning', 'Reset the grid before running an algorithm.')
-                            continue
 
                     # Dijkstra
-                    if event.key == pygame.K_d and not started:
+                    if event.key == pygame.K_d and not started and start and destination:
                         started = True
 
                         for row in grid:
@@ -154,7 +152,7 @@ class GUI:
                         pathfinder.dijkstra(self)
 
                     # A* search
-                    elif event.key == pygame.K_a and not started:
+                    elif event.key == pygame.K_a and not started and start and destination:
                         started = True
 
                         for row in grid:

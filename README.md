@@ -3,29 +3,18 @@
 ## Meet the Algorithms
 
 **Dijkstra** (weighted): <br/>
-The OG which guarantees the shortest path.
+The OG pathfinding algorithm which guarantees the shortest path.
 
 <b>A\* Search</b> (weighted): <br/>
 Arguably the best pathfinding algorithm which uses heuristics to guarantee the shortest path much faster than Dijkstra's Shortest Path.
 
 ## Usage
 
-### Start, Destination and Walls
-
 - Left click to set the start, destination and walls
 - Right click to undo a vertex
-
-### Reset
-
-- Press **c** reset all vertices
-
-### Algorithm
-
+- Press **c** to reset all vertices
 - Press **a** to start the A\* search algorithm
 - Press **d** to start Dijkstra's shortest path algorithm
-
-### Maze
-
 - Press **m** to generate a random maze
 
 ## Requirements

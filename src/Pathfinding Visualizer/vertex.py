@@ -19,7 +19,7 @@ class Vertex:
     __WHITE = (255, 255, 255)
     __BLACK = (12, 53, 71)
     __YELLOW = (255, 254, 106)
-    __ORANGE = (255, 165, 0)
+    __GREEN = (50, 205, 50)
     __DARK_BLUE = (178, 67, 255, 0.75)
     __LIGHT_BLUE = (0, 190, 218, 0.75)
 
@@ -51,7 +51,7 @@ class Vertex:
 
     def make_start(self):
         """Creates the start vertex."""
-        self.__color = self.__ORANGE
+        self.__color = self.__GREEN
 
     def make_destination(self):
         """Creates the end vertex."""
