@@ -2,7 +2,7 @@ from __future__ import annotations
 
 
 class Vertex:
-    def __init__(self, name: str):
+    def __init__(self, name: str) -> None:
         self.name = name
         self.adjacent_edges = set()
         self.visited = False

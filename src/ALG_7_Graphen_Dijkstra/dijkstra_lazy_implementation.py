@@ -15,7 +15,7 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
     while not destination.visited:
         new_vertex_found = False
         for edge in current_vertex.adjacent_edges:
-            if edge.cost == min(edge.cost for edge in current_vertex.adjacent_edges) and not edge.destination.visited:
+            if edge.cost == min(edge.cost for edge in current_vertex.adjacent_edges if not edge.destination.visited):
                 new_vertex = edge.destination
                 new_vertex_found = True
             new_cost = edge.cost + costs[current_vertex]
@@ -33,8 +33,20 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
                     min_cost = costs[vertex]
                     current_vertex = vertex
 
+            found_vertex = False
+            i = 0
+            while not found_vertex and i < len(path):
+                for edge in path[i].adjacent_edges:
+                    if edge.destination == current_vertex:
+                        path = path[:i + 1]
+                        found_vertex = True
+                i += 1
+
+            current_vertex.visited = True
+            path.append(current_vertex)
+
     cost = costs[destination]
-    print(f'Shortest Path: {[vertex.name for vertex in path]}')
+    print(f'Shortest Path: {"".join([(vertex.name + " -> ") for vertex in path if vertex != path[-1]])}{path[-1].name}')
     print(f'Distance: {cost}')
 
 

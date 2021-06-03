@@ -134,7 +134,7 @@ class Pathfinder:
 
     def generate_maze(self) -> None:
         """"""
-        n = round(len(self.__grid) * len(self.__grid) * 0.25)
+        n = round(len(self.__grid) * len(self.__grid) * 0.3)
 
         for i in range(n + 1):
 
