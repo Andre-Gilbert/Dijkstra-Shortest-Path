@@ -1,5 +1,4 @@
 """"""
-from tkinter import Tk, messagebox
 
 import pygame
 
@@ -108,7 +107,7 @@ class GUI:
                         destination = node
                         destination.make_destination()
 
-                    elif node != start and node != destination and not started:
+                    elif node != start and node != destination:
                         node.make_wall()
 
                 # Right click
@@ -128,18 +127,6 @@ class GUI:
                 pathfinder = Pathfinder(grid, start, destination)
 
                 if event.type == pygame.KEYDOWN:
-                    if started and event.key != pygame.K_c:
-                        Tk().wm_withdraw()
-                        user_input = messagebox.askyesno("Reset Grid", "Do you want to reset the grid?")
-
-                        # Yes
-                        if user_input:
-                            started = False
-                            start = destination = None
-                            grid = self.__initialize_grid()
-                            self.draw(grid)
-                        else:
-                            messagebox.showwarning('Warning', 'Reset the grid before running an algorithm.')
 
                     # Dijkstra
                     if event.key == pygame.K_d and not started and start and destination:
@@ -150,6 +137,7 @@ class GUI:
                                 vertex.update_neighbors(grid)
 
                         pathfinder.dijkstra(self)
+                        started = False
 
                     # A* search
                     elif event.key == pygame.K_a and not started and start and destination:
@@ -160,6 +148,7 @@ class GUI:
                                 vertex.update_neighbors(grid)
 
                         pathfinder.a_star_search(self)
+                        started = False
 
                     # Generate maze
                     elif event.key == pygame.K_m and not started:
