@@ -51,6 +51,7 @@ class Pathfinder:
             if current == self.__destination:
                 self.__reconstruct_path(gui, came_from, self.__destination)
                 self.__start.make_start()
+                self.__destination.make_destination()
                 return True
 
             for neighbor in current.neighbors:

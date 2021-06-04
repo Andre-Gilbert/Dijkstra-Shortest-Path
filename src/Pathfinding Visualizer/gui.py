@@ -81,6 +81,7 @@ class GUI:
     def run(self) -> None:
         """Main loop of the gui."""
         run = True
+        run_count = 0
         started = False
         start = destination = None
         grid = self.__initialize_grid()
@@ -132,36 +133,46 @@ class GUI:
                     if event.key == pygame.K_d and not started and start and destination:
                         started = True
 
-                        for row in grid:
-                            for vertex in row:
-                                if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
-                                    vertex.reset_vertex()
+                        if run_count > 0:
+                            for row in grid:
+                                for vertex in row:
+                                    if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
+                                        vertex.reset_vertex()
 
                         for row in grid:
                             for vertex in row:
                                 vertex.update_neighbors(grid)
 
                         pathfinder.dijkstra(self)
+                        run_count += 1
                         started = False
 
                     # A* search
                     elif event.key == pygame.K_a and not started and start and destination:
                         started = True
 
-                        for row in grid:
-                            for vertex in row:
-                                if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
-                                    vertex.reset_vertex()
+                        if run_count > 0:
+                            for row in grid:
+                                for vertex in row:
+                                    if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
+                                        vertex.reset_vertex()
 
                         for row in grid:
                             for vertex in row:
                                 vertex.update_neighbors(grid)
 
                         pathfinder.a_star_search(self)
+                        run_count += 1
                         started = False
 
                     # Generate maze
                     elif event.key == pygame.K_m and not started:
+                        if run_count > 0:
+                            for row in grid:
+                                for vertex in row:
+                                    if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
+                                        vertex.reset_vertex()
+
                         for row in grid:
                             for vertex in row:
                                 if vertex.is_wall():
