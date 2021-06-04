@@ -1,4 +1,5 @@
 """"""
+import time
 from queue import PriorityQueue
 from random import randrange
 
@@ -30,46 +31,46 @@ class Pathfinder:
         Returns:
             True if the shortest path is found, False otherwise.
         """
-        visited = {node: False for row in self.__grid for node in row}
-        distance = {node: float("inf") for row in self.__grid for node in row}
-        distance[self.__start] = 0
-        came_from = {}
+        count = 0
         queue = PriorityQueue()
-        queue.put((0, self.__start))
+        queue.put((0, count, self.__start))
+        visited = {self.__start}
+        came_from = {}
+
+        distance = {vertex: float("inf") for row in self.__grid for vertex in row}
+        distance[self.__start] = 0
 
         while not queue.empty():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
-            current = queue.get()[1]
-
-            if visited[current]:
-                continue
-
-            visited[current] = True
+            current = queue.get()[2]
+            visited.remove(current)
 
             if current == self.__destination:
                 self.__reconstruct_path(gui, came_from, self.__destination)
                 self.__start.make_start()
                 return True
 
-            if current != self.__start:
-                current.make_visited()
-
             for neighbor in current.neighbors:
-                weight = 1
+                temp_distance = distance[current] + 1
 
-                if distance[current] + weight < distance[neighbor]:
+                if temp_distance < distance[neighbor]:
                     came_from[neighbor] = current
-                    distance[neighbor] = distance[current] + weight
-                    queue.put((distance[neighbor], neighbor))
+                    distance[neighbor] = temp_distance
 
-                elif neighbor != self.__destination and neighbor != self.__start and not visited[neighbor]:
-                    neighbor.make_visiting()
+                    if neighbor not in visited:
+                        count += 1
+                        queue.put((distance[neighbor], count, neighbor))
+                        visited.add(neighbor)
+                        neighbor.make_visiting()
 
             # Redraw the gui
             gui.draw(self.__grid)
+
+            if current != self.__start:
+                current.make_visited()
 
         return False
 
