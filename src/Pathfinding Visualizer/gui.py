@@ -96,8 +96,8 @@ class GUI:
                 # Left click
                 if pygame.mouse.get_pressed()[0]:
                     position = pygame.mouse.get_pos()
-                    row, column = self.__get_clicked_position(position)
-                    node = grid[row][column]
+                    row, col = self.__get_clicked_position(position)
+                    node = grid[row][col]
 
                     if not start and node != destination and not node.is_wall():
                         start = node
@@ -113,9 +113,9 @@ class GUI:
                 # Right click
                 elif pygame.mouse.get_pressed()[2]:
                     position = pygame.mouse.get_pos()
-                    row, column = self.__get_clicked_position(position)
-                    node = grid[row][column]
-                    node.reset_node()
+                    row, col = self.__get_clicked_position(position)
+                    node = grid[row][col]
+                    node.reset_vertex()
 
                     if node == start:
                         start = None
@@ -134,6 +134,11 @@ class GUI:
 
                         for row in grid:
                             for vertex in row:
+                                if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
+                                    vertex.reset_vertex()
+
+                        for row in grid:
+                            for vertex in row:
                                 vertex.update_neighbors(grid)
 
                         pathfinder.dijkstra(self)
@@ -145,6 +150,11 @@ class GUI:
 
                         for row in grid:
                             for vertex in row:
+                                if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
+                                    vertex.reset_vertex()
+
+                        for row in grid:
+                            for vertex in row:
                                 vertex.update_neighbors(grid)
 
                         pathfinder.a_star_search(self)
@@ -152,6 +162,11 @@ class GUI:
 
                     # Generate maze
                     elif event.key == pygame.K_m and not started:
+                        for row in grid:
+                            for vertex in row:
+                                if vertex.is_wall():
+                                    vertex.reset_vertex()
+
                         pathfinder.generate_maze()
 
                     # Reset grid

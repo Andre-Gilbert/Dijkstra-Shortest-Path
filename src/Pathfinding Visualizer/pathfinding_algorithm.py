@@ -57,16 +57,35 @@ class Pathfinder:
             if current != self.__start:
                 current.make_visited()
 
+            # for neighbor in current.neighbors:
+            #     weight = 1
+
+            #     if distance[current] + weight < distance[neighbor]:
+            #         came_from[neighbor] = current
+            #         distance[neighbor] = distance[current] + weight
+            #         queue.put((distance[neighbor], neighbor))
+
+            #     elif neighbor != self.__destination and neighbor != self.__start and not visited[neighbor]:
+            #         neighbor.make_visiting()
+
             for neighbor in current.neighbors:
-                weight = 1
 
-                if distance[current] + weight < distance[neighbor]:
-                    came_from[neighbor] = current
-                    distance[neighbor] = distance[current] + weight
-                    queue.put((distance[neighbor], neighbor))
+                # Skip nodes that either cannot be visited or already have been visited
+                if neighbor.is_wall() or neighbor.is_visited():
+                    continue
 
-                elif neighbor != self.__destination and neighbor != self.__start and not visited[neighbor]:
+                # Mark nodes as open
+                if neighbor != self.__destination and neighbor != self.__start:
                     neighbor.make_visiting()
+
+                # Check whether there's a faster path by comparing known
+                # to newly discovered distances
+                alt_dist = distance[current] + 1
+                if alt_dist < distance[neighbor]:
+                    distance[neighbor] = alt_dist
+                    came_from[neighbor] = current
+                    # Add newly discovered neighbor to the queue.
+                    queue.put((distance[neighbor], neighbor))
 
             gui.draw(self.__grid)
 
@@ -133,18 +152,15 @@ class Pathfinder:
         return False
 
     def generate_maze(self) -> None:
-        """"""
+        """Generates a random maze."""
         n = round(len(self.__grid) * len(self.__grid) * 0.3)
 
         for i in range(n + 1):
-
             row = randrange(len(self.__grid))
             col = randrange(len(self.__grid))
 
-            if self.__grid[row][col] == self.__start or self.__grid[row][col] == self.__destination:
-                continue
-
-            self.__grid[row][col].make_wall()
+            if self.__grid[row][col] != self.__start and self.__grid[row][col] != self.__destination:
+                self.__grid[row][col].make_wall()
 
     def __manhatten_distance(self, current: Vertex, destination: Vertex) -> int:
         """Computes the manhatten distance to the destination.

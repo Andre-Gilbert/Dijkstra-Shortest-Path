@@ -1,4 +1,6 @@
 """"""
+from __future__ import annotations
+
 import pygame
 
 
@@ -20,7 +22,7 @@ class Vertex:
     __BLACK = (12, 53, 71)
     __YELLOW = (255, 254, 106)
     __GREEN = (50, 205, 50)
-    __DARK_BLUE = (178, 67, 255, 0.75)
+    __PURPLE = (178, 67, 255, 0.75)
     __LIGHT_BLUE = (0, 190, 218, 0.75)
 
     def __init__(self, row: int, col: int, width: int, total_rows: int) -> None:
@@ -29,8 +31,8 @@ class Vertex:
         self.__color = self.__WHITE
         self.__row = row
         self.__col = col
-        self.__x = row * width
-        self.__y = col * width
+        self.x = row * width
+        self.y = col * width
         self.__width = width
         self.__total_rows = total_rows
 
@@ -42,42 +44,49 @@ class Vertex:
         """Checks whether the vertex is a wall."""
         return self.__color == self.__BLACK
 
-    def color_visited(self):
+    def is_visited(self) -> bool:
+        """"""
         return self.__color == self.__LIGHT_BLUE
 
-    def reset_node(self):
+    def is_visiting(self) -> bool:
+        return self.__color == self.__PURPLE
+
+    def is_path(self) -> bool:
+        return self.__color == self.__YELLOW
+
+    def reset_vertex(self) -> None:
         """Resets the vertex."""
         self.__color = self.__WHITE
 
-    def make_start(self):
+    def make_start(self) -> None:
         """Creates the start vertex."""
         self.__color = self.__GREEN
 
-    def make_destination(self):
+    def make_destination(self) -> None:
         """Creates the end vertex."""
         self.__color = self.__RED
 
-    def make_visited(self):
+    def make_visited(self) -> None:
         """Visited vertex."""
         self.__color = self.__LIGHT_BLUE
 
-    def make_visiting(self):
+    def make_visiting(self) -> None:
         """Currently visiting vertex."""
-        self.__color = self.__DARK_BLUE
+        self.__color = self.__PURPLE
 
-    def make_wall(self):
+    def make_wall(self) -> None:
         """Creates a wall."""
         self.__color = self.__BLACK
 
-    def make_path(self):
+    def make_path(self) -> None:
         """Creates a path."""
         self.__color = self.__YELLOW
 
-    def draw(self, window):
+    def draw(self, window: pygame.display) -> None:
         """Draws the vertex."""
-        pygame.draw.rect(window, self.__color, (self.__x, self.__y, self.__width, self.__width))
+        pygame.draw.rect(window, self.__color, (self.x, self.y, self.__width, self.__width))
 
-    def update_neighbors(self, grid: list[list[object]]) -> None:
+    def update_neighbors(self, grid: list[list[Vertex]]) -> None:
         """Updates all neighbors of a vertex.
 
         Args:
@@ -101,6 +110,6 @@ class Vertex:
         if self.__col > 0 and not grid[self.__row][self.__col - 1].is_wall():
             self.neighbors.append(grid[self.__row][self.__col - 1])
 
-    def __lt__(self, other: object):
+    def __lt__(self, other: Vertex):
         """Less than comparison of two vertices."""
         return False
