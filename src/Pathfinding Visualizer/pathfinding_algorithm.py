@@ -51,7 +51,6 @@ class Pathfinder:
             if current == self.__destination:
                 self.__reconstruct_path(gui, came_from, self.__destination)
                 self.__start.make_start()
-                self.__destination.make_destination()
                 return True
 
             for neighbor in current.neighbors:
@@ -65,7 +64,9 @@ class Pathfinder:
                         count += 1
                         queue.put((distance[neighbor], count, neighbor))
                         visited.add(neighbor)
-                        neighbor.make_visiting()
+
+                        if neighbor != self.__destination:
+                            neighbor.make_visiting()
 
             # Redraw the gui
             gui.draw(self.__grid)
