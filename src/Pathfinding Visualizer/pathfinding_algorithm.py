@@ -57,36 +57,18 @@ class Pathfinder:
             if current != self.__start:
                 current.make_visited()
 
-            # for neighbor in current.neighbors:
-            #     weight = 1
-
-            #     if distance[current] + weight < distance[neighbor]:
-            #         came_from[neighbor] = current
-            #         distance[neighbor] = distance[current] + weight
-            #         queue.put((distance[neighbor], neighbor))
-
-            #     elif neighbor != self.__destination and neighbor != self.__start and not visited[neighbor]:
-            #         neighbor.make_visiting()
-
             for neighbor in current.neighbors:
+                weight = 1
 
-                # Skip nodes that either cannot be visited or already have been visited
-                if neighbor.is_wall() or neighbor.is_visited():
-                    continue
-
-                # Mark nodes as open
-                if neighbor != self.__destination and neighbor != self.__start:
-                    neighbor.make_visiting()
-
-                # Check whether there's a faster path by comparing known
-                # to newly discovered distances
-                alt_dist = distance[current] + 1
-                if alt_dist < distance[neighbor]:
-                    distance[neighbor] = alt_dist
+                if distance[current] + weight < distance[neighbor]:
                     came_from[neighbor] = current
-                    # Add newly discovered neighbor to the queue.
+                    distance[neighbor] = distance[current] + weight
                     queue.put((distance[neighbor], neighbor))
 
+                elif neighbor != self.__destination and neighbor != self.__start and not visited[neighbor]:
+                    neighbor.make_visiting()
+
+            # Redraw the gui
             gui.draw(self.__grid)
 
         return False

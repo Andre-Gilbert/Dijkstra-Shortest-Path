@@ -1,4 +1,4 @@
-""""""
+"""A vertex which will be used for the pathfinding algorithms."""
 from __future__ import annotations
 
 import pygame
@@ -12,8 +12,8 @@ class Vertex:
         __color: Color of the vertex indicates its state.
         __row: Row of the vertex.
         __col: Column of the vertex.
-        __x: x-Coordinate of the vertex in the grid.
-        __y: y-Coordinate of the vertex in the grid.
+        __x: x-Coordinate of the vertex.
+        __y: y-Coordinate of the vertex.
         __width: Width of the vertex.
         __total_rows: Total rows of the grid.
     """
@@ -31,8 +31,8 @@ class Vertex:
         self.__color = self.__WHITE
         self.__row = row
         self.__col = col
-        self.x = row * width
-        self.y = col * width
+        self.__x = row * width
+        self.__y = col * width
         self.__width = width
         self.__total_rows = total_rows
 
@@ -41,17 +41,19 @@ class Vertex:
         return self.__row, self.__col
 
     def is_wall(self) -> bool:
-        """Checks whether the vertex is a wall."""
+        """Checks if the vertex is a wall."""
         return self.__color == self.__BLACK
 
     def is_visited(self) -> bool:
-        """"""
+        """Checks if the state of the vertex is visited."""
         return self.__color == self.__LIGHT_BLUE
 
     def is_visiting(self) -> bool:
+        """Checks if the state of the vertex is visiting."""
         return self.__color == self.__PURPLE
 
     def is_path(self) -> bool:
+        """Checks if the vertex belongs to the shortest path."""
         return self.__color == self.__YELLOW
 
     def reset_vertex(self) -> None:
@@ -63,7 +65,7 @@ class Vertex:
         self.__color = self.__GREEN
 
     def make_destination(self) -> None:
-        """Creates the end vertex."""
+        """Creates the destination vertex."""
         self.__color = self.__RED
 
     def make_visited(self) -> None:
@@ -84,7 +86,7 @@ class Vertex:
 
     def draw(self, window: pygame.display) -> None:
         """Draws the vertex."""
-        pygame.draw.rect(window, self.__color, (self.x, self.y, self.__width, self.__width))
+        pygame.draw.rect(window, self.__color, (self.__x, self.__y, self.__width, self.__width))
 
     def update_neighbors(self, grid: list[list[Vertex]]) -> None:
         """Updates all neighbors of a vertex.
