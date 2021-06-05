@@ -1,4 +1,18 @@
-"""A vertex which will be used for the pathfinding algorithms."""
+"""The vertices, or nodes, denoted in the pathfinding visualizer.
+
+A vertex is represented as a cell in the visualizer.
+Depending of the state, a vertex will be colored differently:
+- start: green
+- destination: red
+- wall: black
+- unvisited vertices: white
+- visited vertices: blue
+- visiting vertices: purple
+- shortest path: yellow
+
+Addionally a vertex belongs to a row and column in the grid,
+has x, y coordinates, a width, and has access to all of its neighbors.
+"""
 from __future__ import annotations
 
 import pygame
@@ -12,8 +26,8 @@ class Vertex:
         __color: Color of the vertex indicates its state.
         __row: Row of the vertex.
         __col: Column of the vertex.
-        __x: x-Coordinate of the vertex.
-        __y: y-Coordinate of the vertex.
+        __x: x coordinate of the vertex.
+        __y: y coordinate of the vertex.
         __width: Width of the vertex.
         __total_rows: Total rows of the grid.
     """
@@ -23,7 +37,7 @@ class Vertex:
     __YELLOW = (255, 254, 106)
     __GREEN = (50, 205, 50)
     __PURPLE = (178, 67, 255, 0.75)
-    __LIGHT_BLUE = (0, 190, 218, 0.75)
+    __BLUE = (0, 190, 218, 0.75)
 
     def __init__(self, row: int, col: int, width: int, total_rows: int) -> None:
         """Initializes a vertex in the grid."""
@@ -46,7 +60,7 @@ class Vertex:
 
     def is_visited(self) -> bool:
         """Checks if the state of the vertex is visited."""
-        return self.__color == self.__LIGHT_BLUE
+        return self.__color == self.__BLUE
 
     def is_visiting(self) -> bool:
         """Checks if the state of the vertex is visiting."""
@@ -57,31 +71,31 @@ class Vertex:
         return self.__color == self.__YELLOW
 
     def reset_vertex(self) -> None:
-        """Resets the vertex."""
+        """Resets the vertex by coloring it white."""
         self.__color = self.__WHITE
 
     def make_start(self) -> None:
-        """Creates the start vertex."""
+        """Colors the vertex green if it's the start."""
         self.__color = self.__GREEN
 
     def make_destination(self) -> None:
-        """Creates the destination vertex."""
+        """Colors the vertex red if it's the destination."""
         self.__color = self.__RED
 
     def make_visited(self) -> None:
-        """Visited vertex."""
+        """Colors the vertex blue if the algorithm has visited it."""
         self.__color = self.__LIGHT_BLUE
 
     def make_visiting(self) -> None:
-        """Currently visiting vertex."""
+        """Colors the vertex purple if the algorithm will visit it next."""
         self.__color = self.__PURPLE
 
     def make_wall(self) -> None:
-        """Creates a wall."""
+        """Colors the vertex black if it's a wall."""
         self.__color = self.__BLACK
 
     def make_path(self) -> None:
-        """Creates a path."""
+        """Colors the vertex yellow if it belongs to the shortest path."""
         self.__color = self.__YELLOW
 
     def draw(self, window: pygame.display) -> None:
@@ -92,7 +106,7 @@ class Vertex:
         """Updates all neighbors of a vertex.
 
         Args:
-            grid: The grid containing vertex objects.
+            grid: The grid containing all vertices.
         """
         self.neighbors = []
 
@@ -112,6 +126,6 @@ class Vertex:
         if self.__col > 0 and not grid[self.__row][self.__col - 1].is_wall():
             self.neighbors.append(grid[self.__row][self.__col - 1])
 
-    def __lt__(self, other: Vertex):
+    def __lt__(self, other: Vertex) -> bool:
         """Less than comparison of two vertices."""
         return False

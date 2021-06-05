@@ -1,4 +1,10 @@
-""""""
+"""Pathfinder implements the pathfinding algorithms.
+
+Given a grid, the start and destination vertex
+the shortest path can be found using one of two algorithms:
+- Dijkstra's shortest path
+- A* search algorithm
+"""
 from queue import PriorityQueue
 from random import randrange
 
@@ -25,7 +31,7 @@ class Pathfinder:
         """Visualizes Dijkstra's shortest path algorithm.
 
         Args:
-            gui: The grid object.
+            gui: The graphical user interface.
 
         Returns:
             True if the shortest path is found, False otherwise.
@@ -47,11 +53,13 @@ class Pathfinder:
             current = queue.get()[2]
             visited.remove(current)
 
+            # Reconstruct path
             if current == self.__destination:
                 self.__reconstruct_path(gui, came_from, self.__destination)
                 self.__start.make_start()
                 return True
 
+            # Check all neighbors
             for neighbor in current.neighbors:
                 temp_distance = distance[current] + 1
 
@@ -64,12 +72,14 @@ class Pathfinder:
                         queue.put((distance[neighbor], count, neighbor))
                         visited.add(neighbor)
 
+                        # Mark as visiting
                         if neighbor != self.__destination:
                             neighbor.make_visiting()
 
             # Redraw the gui
             gui.draw(self.__grid)
 
+            # Mark as visited
             if current != self.__start:
                 current.make_visited()
 
@@ -79,7 +89,7 @@ class Pathfinder:
         """Visualizes the A* search algorithm.
 
         Args:
-            gui: The grid object.
+            gui: The graphical user interface.
 
         Returns:
             True if the shortest path is found, False otherwise.
@@ -105,11 +115,13 @@ class Pathfinder:
             current = queue.get()[2]
             open_set.remove(current)
 
+            # Reconstruct path
             if current == self.__destination:
                 self.__reconstruct_path(gui, came_from, self.__destination)
                 self.__start.make_start()
                 return True
 
+            # Check all neighbors
             for neighbor in current.neighbors:
                 temp_g_score = g_score[current] + 1
 
@@ -124,12 +136,14 @@ class Pathfinder:
                         queue.put((f_score[neighbor], count, neighbor))
                         open_set.add(neighbor)
 
+                        # Mark as visiting
                         if neighbor != self.__destination:
                             neighbor.make_visiting()
 
             # Redraw the grid
             gui.draw(self.__grid)
 
+            # Mark as visited
             if current != self.__start:
                 current.make_visited()
 
@@ -154,8 +168,8 @@ class Pathfinder:
             destination: The destination vertex.
 
         Returns:
-            The absolute distance of the x-Coordinate and
-            the y-Coordinate of the current vertex to the destination.
+            The absolute distance of the x, y coordinates
+            of the current vertex to the destination.
         """
         x1, y1 = current
         x2, y2 = destination
@@ -165,8 +179,8 @@ class Pathfinder:
         """Reconstructs the shortest path.
 
         Args:
-            gui: The gui object.
-            came_from: A dictionary containing the shortest path.
+            gui: The graphical user interface.
+            came_from: A dictionary containing the path to the destination.
             current: The current vertex we're considering.
         """
         while current in came_from:

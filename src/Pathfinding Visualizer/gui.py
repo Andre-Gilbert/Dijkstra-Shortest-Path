@@ -1,5 +1,13 @@
-""""""
+"""Implements the graphical user interface using pygame.
 
+The GUI handles mouse and keyboard events such as:
+- Left click to create the start, destination and walls
+- Right click to undo a vertex
+- Press c to reset all vertices
+- Press a to start the A* search algorithm
+- Press d to start Dijkstra's shortest path algorithm
+- Press m to generate a random maze
+"""
 import pygame
 
 from pathfinding_algorithm import Pathfinder
@@ -38,7 +46,7 @@ class GUI:
         """Initializes an empty grid.
 
         Returns:
-            A 2D array containing all of the vertices in the grid.
+            A 2D array containing all vertices in the grid.
         """
         grid = []
 
@@ -51,7 +59,11 @@ class GUI:
         return grid
 
     def draw(self, grid: list[list[Vertex]]) -> None:
-        """Draws the vertices."""
+        """Draw the vertices.
+
+        Args:
+            grid: The grid containing all vertices.
+        """
         for row in grid:
             for node in row:
                 node.draw(self.__window)
@@ -60,13 +72,13 @@ class GUI:
         pygame.display.update()
 
     def __draw_lines(self) -> None:
-        """Draws the grid lines."""
+        """Draw the grid lines."""
         for i in range(self.__rows):
             pygame.draw.line(self.__window, self.__LIGHT_BLUE, (0, i * self.__gap), (self.__width, i * self.__gap))
             pygame.draw.line(self.__window, self.__LIGHT_BLUE, (i * self.__gap, 0), (i * self.__gap, self.__width))
 
     def __get_clicked_position(self, position: tuple[int, int]) -> tuple[int, int]:
-        """Gets the clicked position.
+        """Get the clicked position.
 
         Args:
             position: x-, y-Coordinate of the position.
@@ -80,8 +92,8 @@ class GUI:
 
     def run(self) -> None:
         """Main loop of the gui."""
+        mode = 0
         run = True
-        run_count = 0
         started = False
         start = destination = None
         grid = self.__initialize_grid()
@@ -129,11 +141,11 @@ class GUI:
 
                 if event.type == pygame.KEYDOWN:
 
-                    # Dijkstra
+                    # Dijkstra's shortest path
                     if event.key == pygame.K_d and not started and start and destination:
                         started = True
 
-                        if run_count > 0:
+                        if mode != 0:
                             for row in grid:
                                 for vertex in row:
                                     if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
@@ -144,14 +156,14 @@ class GUI:
                                 vertex.update_neighbors(grid)
 
                         pathfinder.dijkstra(self)
-                        run_count += 1
+                        mode = 1
                         started = False
 
-                    # A* search
+                    # A* search algorithm
                     elif event.key == pygame.K_a and not started and start and destination:
                         started = True
 
-                        if run_count > 0:
+                        if mode != 0:
                             for row in grid:
                                 for vertex in row:
                                     if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
@@ -162,12 +174,12 @@ class GUI:
                                 vertex.update_neighbors(grid)
 
                         pathfinder.a_star_search(self)
-                        run_count += 1
+                        mode = 1
                         started = False
 
                     # Generate maze
                     elif event.key == pygame.K_m and not started:
-                        if run_count > 0:
+                        if mode != 0:
                             for row in grid:
                                 for vertex in row:
                                     if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
@@ -182,6 +194,7 @@ class GUI:
 
                     # Reset grid
                     elif event.key == pygame.K_c:
+                        mode = 0
                         started = False
                         start = destination = None
                         grid = self.__initialize_grid()
