@@ -84,7 +84,7 @@ class Vertex:
 
     def make_visited(self) -> None:
         """Colors the vertex blue if the algorithm has visited it."""
-        self.__color = self.__LIGHT_BLUE
+        self.__color = self.__BLUE
 
     def make_visiting(self) -> None:
         """Colors the vertex purple if the algorithm will visit it next."""
