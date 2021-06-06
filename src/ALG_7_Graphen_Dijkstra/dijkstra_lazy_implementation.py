@@ -45,9 +45,8 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
             current_vertex.visited = True
             path.append(current_vertex)
 
-    cost = costs[destination]
     print(f'Shortest Path: {"".join([(vertex.name + " -> ") for vertex in path if vertex != path[-1]])}{path[-1].name}')
-    print(f'Distance: {cost}')
+    print(f'Distance: {costs[destination]}')
 
 
 if __name__ == "__main__":
