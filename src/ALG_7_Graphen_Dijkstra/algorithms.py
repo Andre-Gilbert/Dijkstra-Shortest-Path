@@ -1,5 +1,6 @@
-"""A dijkstra shortest path lazy implementation."""
-
+"""Contains the different variations of Dijktra's Algotithm for finding the shortest
+path from a start vertex to a destination vertex in a directed graph.
+"""
 import heapq
 from queue import PriorityQueue
 
@@ -7,6 +8,8 @@ from data_structures import Graph, Vertex
 
 
 def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
+    """Dijktra's shortest path with priority queue.
+    """
     count = 0
     queue = PriorityQueue()
     queue.put((0, count, start))
@@ -46,6 +49,8 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
 
 def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
+    """Dijktra's shortest path with heapqueue.
+    """
     heap = [(0, start)]
     visited = {start}
     came_from = {}
@@ -80,4 +85,5 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
 
 def a_star_search() -> None:
+    """tbd"""
     pass
