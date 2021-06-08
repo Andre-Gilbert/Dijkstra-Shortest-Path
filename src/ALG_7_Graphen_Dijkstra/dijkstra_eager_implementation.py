@@ -1,14 +1,12 @@
 """A dijkstra shortest path eager implementation."""
 
-from queue import PriorityQueue
+import heapq
 
 from dijkstra_classes import Edge, Graph, Vertex
 
 
 def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
-    count = 0
-    queue = PriorityQueue()
-    queue.put((0, count, start))
+    heap = [(0, start)]
     visited = {start}
     came_from = {}
 
@@ -16,10 +14,8 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
     costs[start] = 0
 
-    while not queue.empty():
-
-        current = queue.get()[2]
-        visited.remove(current)
+    while heap:
+        current = heapq.heappop(heap)[1]
 
         for edge in current.adjacent_edges:
             temp_distance = costs[current] + edge.cost
@@ -29,10 +25,17 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
                 costs[edge.destination] = temp_distance
 
                 if edge.destination not in visited:
-                    count += 1
-                    queue.put((costs[edge.destination], count, edge.destination))
+                    heapq.heappush(heap, (costs[edge.destination], edge.destination))
                     visited.add(edge.destination)
 
+    current = destination
+    path = current.name
+
+    while current in came_from:
+        current = came_from[current]
+        path = f'{current.name} -> {path}'
+
+    print(f'Shortest Path: {path}')
     print(f'Distance: {costs[destination]}')
 
 

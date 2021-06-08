@@ -1,51 +1,46 @@
 """A dijkstra shortest path lazy implementation."""
 
+from queue import PriorityQueue
+
 from dijkstra_classes import Edge, Graph, Vertex
 
 
 def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
+    count = 0
+    queue = PriorityQueue()
+    queue.put((0, count, start))
+    visited = {start}
+    came_from = {}
+
     costs = dict.fromkeys(graph.vertices, float('inf'))
 
-    current_vertex = start
-    current_vertex.visited = True
-    costs[current_vertex] = 0
+    costs[start] = 0
 
-    path = [current_vertex]
+    while not queue.empty():
 
-    while not destination.visited:
-        new_vertex_found = False
-        for edge in current_vertex.adjacent_edges:
-            if edge.cost == min(edge.cost for edge in current_vertex.adjacent_edges if not edge.destination.visited):
-                new_vertex = edge.destination
-                new_vertex_found = True
-            new_cost = edge.cost + costs[current_vertex]
-            if costs[edge.destination] > new_cost:
-                costs[edge.destination] = new_cost
+        current = queue.get()[2]
+        visited.remove(current)
 
-        if new_vertex_found:
-            current_vertex = new_vertex
-            current_vertex.visited = True
-            path.append(current_vertex)
-        else:
-            min_cost = float('inf')
-            for vertex in [vertex for vertex in graph.vertices if not vertex.visited]:
-                if costs[vertex] < min_cost:
-                    min_cost = costs[vertex]
-                    current_vertex = vertex
+        for edge in current.adjacent_edges:
+            temp_distance = costs[current] + edge.cost
 
-            found_vertex = False
-            i = 0
-            while not found_vertex and i < len(path):
-                for edge in path[i].adjacent_edges:
-                    if edge.destination == current_vertex:
-                        path = path[:i + 1]
-                        found_vertex = True
-                i += 1
+            if temp_distance < costs[edge.destination]:
+                came_from[edge.destination] = current
+                costs[edge.destination] = temp_distance
 
-            current_vertex.visited = True
-            path.append(current_vertex)
+                if edge.destination not in visited:
+                    count += 1
+                    queue.put((costs[edge.destination], count, edge.destination))
+                    visited.add(edge.destination)
 
-    print(f'Shortest Path: {"".join([(vertex.name + " -> ") for vertex in path if vertex != path[-1]])}{path[-1].name}')
+    current = destination
+    path = current.name
+
+    while current in came_from:
+        current = came_from[current]
+        path = f'{current.name} -> {path}'
+
+    print(f'Shortest Path: {path}')
     print(f'Distance: {costs[destination]}')
 
 
