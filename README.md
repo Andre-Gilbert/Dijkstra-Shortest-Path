@@ -10,7 +10,7 @@ The OG pathfinding algorithm which guarantees the shortest path.
 <b>A\* Search Algorithm</b> (weighted): <br/>
 Arguably the best pathfinding algorithm which uses heuristics to guarantee the shortest path much faster than Dijkstra's Shortest Path.
 
-## Usage
+## Pathfinding Visualizer Usage
 
 - Left click to set the start, destination and walls
 - Right click to undo a vertex
