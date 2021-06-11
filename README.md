@@ -1,11 +1,13 @@
 # Dijkstra Shortest Path
 
+This repository's goal is to demonstrate how to implement pathfinding algorithms in the simplest and most elegant ways.
+
 ## Meet the Algorithms
 
-**Dijkstra** (weighted): <br/>
+**Dijkstra Shortest Path** (weighted): <br/>
 The OG pathfinding algorithm which guarantees the shortest path.
 
-<b>A\* Search</b> (weighted): <br/>
+<b>A\* Search Algorithm</b> (weighted): <br/>
 Arguably the best pathfinding algorithm which uses heuristics to guarantee the shortest path much faster than Dijkstra's Shortest Path.
 
 ## Usage
