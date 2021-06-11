@@ -1,6 +1,6 @@
 # Pathfinding Algorithms
 
-This repository's goal is to demonstrate how to implement pathfinding algorithms in the simplest and most elegant ways. At its core, a pathfinding algorithms searches a graph by starting at one vertex and exploring adjacent vertices until the destination is reached, generally with the intent of finding the shortest path.
+This repository's goal is to demonstrate how to implement pathfinding algorithms in the simplest and most elegant ways. At its core, a pathfinding algorithm searches a graph by starting at one vertex and exploring adjacent vertices until the destination is reached, generally with the intent of finding the shortest path.
 
 ## Meet the Algorithms
 
