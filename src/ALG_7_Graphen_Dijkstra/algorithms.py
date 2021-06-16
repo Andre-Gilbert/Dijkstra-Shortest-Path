@@ -10,10 +10,9 @@ from data_structures import Graph, Vertex
 def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
     """Dijktra's shortest path with priority queue.
     """
-    count = 0
     queue = PriorityQueue()
-    queue.put((0, count, start))
-    visited = {start}
+    queue.put((0, start))
+    visited = set()
     came_from = {}
 
     costs = dict.fromkeys(graph.vertices, float('inf'))
@@ -22,20 +21,21 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
     while not queue.empty():
 
-        current = queue.get()[2]
-        visited.remove(current)
+        print([queue.queue[n] for n in range(queue.qsize())])
+        current = queue.get()[1]
+        visited.add(current)
+        print(current.name)
 
         for edge in current.adjacent_edges:
+            if edge in visited:
+                continue
             temp_distance = costs[current] + edge.cost
 
             if temp_distance < costs[edge.destination]:
                 came_from[edge.destination] = current
                 costs[edge.destination] = temp_distance
 
-                if edge.destination not in visited:
-                    count += 1
-                    queue.put((costs[edge.destination], count, edge.destination))
-                    visited.add(edge.destination)
+                queue.put((costs[edge.destination], edge.destination))
 
     current = destination
     path = current.name
@@ -52,7 +52,7 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
     """Dijktra's shortest path with heapqueue.
     """
     heap = [(0, start)]
-    visited = {start}
+    visited = set()
     came_from = {}
 
     costs = dict.fromkeys(graph.vertices, float('inf'))
@@ -60,18 +60,29 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
     costs[start] = 0
 
     while heap:
-        current = heapq.heappop(heap)[1]
+        print(heap)
+        idx, current = heapq.heappop(heap)
+        visited.add(current)
+        print(current.name)
 
+        if costs[current] < idx:
+            continue
         for edge in current.adjacent_edges:
+            if edge in visited:
+                continue
             temp_distance = costs[current] + edge.cost
 
             if temp_distance < costs[edge.destination]:
                 came_from[edge.destination] = current
                 costs[edge.destination] = temp_distance
 
-                if edge.destination not in visited:
+                if edge.destination not in [tup[1] for tup in heap]:
                     heapq.heappush(heap, (costs[edge.destination], edge.destination))
-                    visited.add(edge.destination)
+                else:
+                    # decrease key
+                    for idx, tup in enumerate(heap):
+                        if tup[1] == edge.destination:
+                            heap[idx] = (temp_distance, tup[1])
 
     current = destination
     path = current.name

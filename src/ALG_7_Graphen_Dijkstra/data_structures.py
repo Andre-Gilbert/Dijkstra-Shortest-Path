@@ -14,6 +14,10 @@ class Vertex:
         self.adjacent_edges = set()
         self.visited = False
 
+    def __lt__(self, other: Vertex) -> bool:
+        """Less than comparison of two vertices."""
+        return False
+
     def set_adjacent_edges(self, edges: set[Edge]) -> None:
         """Initializes all edges leading away from this vertex."""
         for edge in edges:

@@ -38,7 +38,7 @@ if __name__ == "__main__":
     print(f'Eager Dijkstra took: {end - start} s')
 
     start = time.time()
-    a_star_search(graph, v_a, v_e)
+    a_star_search()
     end = time.time()
 
     print(f'A*-Search took {end - start} s')
