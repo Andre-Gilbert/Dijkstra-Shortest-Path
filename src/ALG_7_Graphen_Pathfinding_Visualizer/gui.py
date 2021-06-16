@@ -92,7 +92,7 @@ class GUI:
 
     def run(self) -> None:
         """Main loop of the gui."""
-        mode = 0
+        count = 0
         run = True
         started = False
         start = destination = None
@@ -145,7 +145,7 @@ class GUI:
                     if event.key == pygame.K_d and not started and start and destination:
                         started = True
 
-                        if mode != 0:
+                        if count > 0:
                             for row in grid:
                                 for vertex in row:
                                     if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
@@ -156,14 +156,14 @@ class GUI:
                                 vertex.update_neighbors(grid)
 
                         pathfinder.dijkstra(self)
-                        mode = 1
+                        count += 1
                         started = False
 
                     # A* search algorithm
                     elif event.key == pygame.K_a and not started and start and destination:
                         started = True
 
-                        if mode != 0:
+                        if count > 0:
                             for row in grid:
                                 for vertex in row:
                                     if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
@@ -174,12 +174,12 @@ class GUI:
                                 vertex.update_neighbors(grid)
 
                         pathfinder.a_star_search(self)
-                        mode = 1
+                        count += 1
                         started = False
 
                     # Generate maze
                     elif event.key == pygame.K_m and not started:
-                        if mode != 0:
+                        if count > 0:
                             for row in grid:
                                 for vertex in row:
                                     if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
@@ -194,7 +194,7 @@ class GUI:
 
                     # Reset grid
                     elif event.key == pygame.K_c:
-                        mode = 0
+                        count = 0
                         started = False
                         start = destination = None
                         grid = self.__initialize_grid()
