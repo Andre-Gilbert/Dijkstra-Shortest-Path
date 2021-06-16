@@ -2,8 +2,13 @@
 
 Given a grid, the start and destination vertex
 the shortest path can be found using one of two algorithms:
-- Dijkstra's shortest path
-- A* search algorithm
+Dijkstra's shortest path
+    - O(E*log(V)) time complexity
+    - O(V^2) space complexity
+
+A* search algorithm
+    - Manhatten distance heuristic
+    - h = |x_start - x_destination| + |y_start - y_destination|
 """
 from queue import PriorityQueue
 from random import randrange
