@@ -8,21 +8,28 @@ from __future__ import annotations
 
 
 class Vertex:
+    """Represents a vertex in the graph.
+
+    Attributes:
+        name: Name of the vertex.
+        adjacent_edges: Neighbors of a vertex.
+        visited: Flag if the vertex has been visited.
+    """
     def __init__(self, name: str) -> None:
         """Initializes a Vertex object."""
         self.name = name
         self.adjacent_edges = set()
         self.visited = False
 
-    def __lt__(self, other: Vertex) -> bool:
-        """Less than comparison of two vertices."""
-        return False
-
     def set_adjacent_edges(self, edges: set[Edge]) -> None:
         """Initializes all edges leading away from this vertex."""
         for edge in edges:
             if self == edge.start:
                 self.adjacent_edges.add(edge)
+
+    def __lt__(self, other: Vertex) -> bool:
+        """Less than comparison of two vertices."""
+        return False
 
 
 class Edge:
@@ -34,7 +41,7 @@ class Edge:
         cost: Path costs of the respective edge.
     """
     def __init__(self, start: Vertex, destination: Vertex, cost: int) -> None:
-        """Initialzes an Edge object."""
+        """Initializes an Edge object."""
         self.start = start
         self.destination = destination
         self.cost = cost
@@ -43,7 +50,7 @@ class Edge:
 class Graph:
     """Represents a weighted graph consisting of vertices and edges.
 
-    Attributes
+    Attributes:
         vertices: List of all vertices the graph contains.
         edges: List of all edges the graph contains.
     """

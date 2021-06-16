@@ -9,6 +9,15 @@ from data_structures import Graph, Vertex
 
 def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
     """Dijktra's shortest path with priority queue.
+
+    Args:
+        graph:
+        start: The start vertex.
+        destination: The destination vertex.
+
+    Complexity:
+        time: O(E*log(V))
+        space: O(V^2)
     """
     queue = PriorityQueue()
     queue.put((0, start))
@@ -50,6 +59,15 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
 def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
     """Dijktra's shortest path with heapqueue.
+
+    Args:
+        graph:
+        start: The start vertex.
+        destination: The destination vertex.
+
+    Complexity:
+        time: 
+        space:
     """
     heap = [(0, start)]
     visited = set()
