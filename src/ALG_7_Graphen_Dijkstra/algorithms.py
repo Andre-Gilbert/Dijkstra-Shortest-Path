@@ -63,8 +63,8 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
         destination: The destination vertex.
 
     Complexity:
-        time:
-        space:
+        time: O(E*log_E/2(V))
+        space: O(V^2)
     """
     heap = [(0, start)]
     visited = set()

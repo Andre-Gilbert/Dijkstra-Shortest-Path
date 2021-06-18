@@ -29,13 +29,13 @@ if __name__ == "__main__":
     dijkstra_lazy(graph, v_a, v_e)
     end = time.time()
 
-    print(f'Lazy Dijkstra took: {end - start} s')
+    print(f'Lazy Dijkstra took: {(end - start):.10f} s')
 
     start = time.time()
     dijkstra_eager(graph, v_a, v_e)
     end = time.time()
 
-    print(f'Eager Dijkstra took: {end - start} s')
+    print(f'Eager Dijkstra took: {(end - start):.10f} s')
 
     start = time.time()
     a_star_search()
