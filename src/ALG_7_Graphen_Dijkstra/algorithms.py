@@ -29,11 +29,8 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
     costs[start] = 0
 
     while not queue.empty():
-
-        print([queue.queue[n] for n in range(queue.qsize())])
         current = queue.get()[1]
         visited.add(current)
-        print(current.name)
 
         for edge in current.adjacent_edges:
             if edge in visited:
@@ -78,10 +75,8 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
     costs[start] = 0
 
     while heap:
-        print(heap)
         idx, current = heapq.heappop(heap)
         visited.add(current)
-        print(current.name)
 
         if costs[current] < idx:
             continue
