@@ -17,7 +17,7 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
     Complexity:
         time: O(E*log(V))
-        space: O(V^2)
+        space: O(V)
     """
     queue = PriorityQueue()
     queue.put((0, start))
@@ -63,8 +63,8 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
         destination: The destination vertex.
 
     Complexity:
-        time: O(E*log_E/2(V))
-        space: O(V^2)
+        time: O(E*log(V))
+        space: O(V)
     """
     heap = [(0, start)]
     visited = set()

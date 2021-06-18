@@ -4,7 +4,7 @@ Given a grid, the start and destination vertex
 the shortest path can be found using one of two algorithms:
 Dijkstra's shortest path
     - O(E*log(V)) time complexity
-    - O(V^2) space complexity
+    - O(V) space complexity
 
 A* search algorithm
     - Manhatten distance heuristic
