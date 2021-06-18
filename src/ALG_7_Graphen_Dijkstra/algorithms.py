@@ -66,7 +66,7 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
         destination: The destination vertex.
 
     Complexity:
-        time: 
+        time:
         space:
     """
     heap = [(0, start)]
