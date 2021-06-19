@@ -1,5 +1,17 @@
-"""Contains the different variations of Dijktra's Algotithm for finding the shortest
-path from a start vertex to a destination vertex in a directed graph.
+"""Contains the different variations of Dijktra's Algorithm.
+
+It supports a lazy and an eager version of dijkstra's shortest path.
+Before you run the algorithms, you need to create a graph, and pass
+the graph as an argument.
+
+Lazy implementation:
+    Rather than updating existing key's value in O(n), the lazy version
+    inserts key-value pairs in O(log(n)) even if they already exist in our
+    priority queue.
+
+Eager implementation:
+    The eager version uses a heapq which supports efficient value updates
+    in O(log(n)) to avoid inserting duplicate key-value pairs.
 """
 import heapq
 from queue import PriorityQueue
@@ -11,7 +23,7 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
     """Dijktra's shortest path with priority queue.
 
     Args:
-        graph:
+        graph: A graph with edges and vertices.
         start: The start vertex.
         destination: The destination vertex.
 
@@ -25,7 +37,6 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
     came_from = {}
 
     costs = dict.fromkeys(graph.vertices, float('inf'))
-
     costs[start] = 0
 
     while not queue.empty():
@@ -35,6 +46,7 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
         for edge in current.adjacent_edges:
             if edge in visited:
                 continue
+
             temp_distance = costs[current] + edge.cost
 
             if temp_distance < costs[edge.destination]:
@@ -58,7 +70,7 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
     """Dijktra's shortest path with heapqueue.
 
     Args:
-        graph:
+        graph: A graph with edges and vertices.
         start: The start vertex.
         destination: The destination vertex.
 
@@ -71,7 +83,6 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
     came_from = {}
 
     costs = dict.fromkeys(graph.vertices, float('inf'))
-
     costs[start] = 0
 
     while heap:
@@ -80,9 +91,11 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
         if costs[current] < idx:
             continue
+
         for edge in current.adjacent_edges:
             if edge in visited:
                 continue
+
             temp_distance = costs[current] + edge.cost
 
             if temp_distance < costs[edge.destination]:
