@@ -101,7 +101,13 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
 
 def __reconstruct_path(came_from: dict, current: Vertex, costs: dict) -> None:
-    """Reconstructs the shortest path."""
+    """Reconstructs the shortest path.
+
+    Args:
+        costs: A dictionary containing all of the costs.
+        came_from: A dictionary containing the path to the destination.
+        current: The current vertex we're considering.
+    """
     print(f'Distance: {costs[current]}')
     path = current.name
 
