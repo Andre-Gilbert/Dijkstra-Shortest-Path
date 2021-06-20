@@ -27,7 +27,7 @@ Typical usage example:
 """
 import time
 
-from algorithms import a_star_search, dijkstra_eager, dijkstra_lazy
+from algorithms import dijkstra_eager, dijkstra_lazy
 from data_structures import Edge, Graph, Vertex
 
 # Example usage
@@ -64,9 +64,3 @@ if __name__ == "__main__":
     end = time.time()
 
     print(f'Eager Dijkstra took: {(end - start):.10f} s')
-
-    start = time.time()
-    a_star_search()
-    end = time.time()
-
-    print(f'A*-Search took {end - start} s')

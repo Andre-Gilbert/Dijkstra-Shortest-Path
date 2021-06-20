@@ -10,8 +10,7 @@ Lazy implementation:
     priority queue.
 
 Eager implementation:
-    The eager version uses a heapq which supports efficient value updates
-    in O(log(n)) to avoid inserting duplicate key-value pairs.
+    The eager version uses a heapq which avoids inserting duplicate key-value pairs.
 """
 import heapq
 from queue import PriorityQueue
@@ -26,10 +25,6 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
         graph: A graph with edges and vertices.
         start: The start vertex.
         destination: The destination vertex.
-
-    Complexity:
-        time: O(E*log(V))
-        space: O(V)
     """
     queue = PriorityQueue()
     queue.put((0, start))
@@ -55,15 +50,7 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
                 queue.put((costs[edge.destination], edge.destination))
 
-    current = destination
-    path = current.name
-
-    while current in came_from:
-        current = came_from[current]
-        path = f'{current.name} -> {path}'
-
-    print(f'Shortest Path: {path}')
-    print(f'Distance: {costs[destination]}')
+    __reconstruct_path(came_from, destination, costs)
 
 
 def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
@@ -73,12 +60,9 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
         graph: A graph with edges and vertices.
         start: The start vertex.
         destination: The destination vertex.
-
-    Complexity:
-        time: O(E*log(V))
-        space: O(V)
     """
     heap = [(0, start)]
+    heap_vertices = set()
     visited = set()
     came_from = {}
 
@@ -102,15 +86,23 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
                 came_from[edge.destination] = current
                 costs[edge.destination] = temp_distance
 
-                if edge.destination not in [tup[1] for tup in heap]:
+                if edge.destination not in heap_vertices:
+                    heap_vertices.add(edge.destination)
                     heapq.heappush(heap, (costs[edge.destination], edge.destination))
                 else:
-                    # decrease key
+                    # Since the heapq module doesn't support a decrease key method
+                    # with O(1) lookup, we iterate over the heap in O(V) as a workaround.
                     for idx, tup in enumerate(heap):
-                        if tup[1] == edge.destination:
+                        if tup[1] == edge.destination and temp_distance < tup[0]:
                             heap[idx] = (temp_distance, tup[1])
+                            heapq.heapify(heap)
 
-    current = destination
+    __reconstruct_path(came_from, destination, costs)
+
+
+def __reconstruct_path(came_from: dict, current: Vertex, costs: dict) -> None:
+    """Reconstructs the shortest path."""
+    print(f'Distance: {costs[current]}')
     path = current.name
 
     while current in came_from:
@@ -118,9 +110,3 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
         path = f'{current.name} -> {path}'
 
     print(f'Shortest Path: {path}')
-    print(f'Distance: {costs[destination]}')
-
-
-def a_star_search() -> None:
-    """tbd"""
-    pass
