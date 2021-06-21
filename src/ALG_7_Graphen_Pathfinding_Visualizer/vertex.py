@@ -1,7 +1,7 @@
 """The vertices, or nodes, denoted in the pathfinding visualizer.
 
 A vertex is represented as a cell in the visualizer.
-Depending of the state, a vertex will be colored differently:
+Depending on the state, a vertex will be colored differently:
 - start: green
 - destination: red
 - wall: black
