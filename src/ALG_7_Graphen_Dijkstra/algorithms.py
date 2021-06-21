@@ -103,9 +103,9 @@ def __reconstruct_path(came_from: dict, current: Vertex, costs: dict) -> None:
     """Reconstructs the shortest path.
 
     Args:
-        costs: A dictionary containing all of the costs.
         came_from: A dictionary containing the path to the destination.
         current: The current vertex we're considering.
+        costs: A dictionary containing all of the costs.
     """
     print(f'Distance: {costs[current]}')
     path = current.name
