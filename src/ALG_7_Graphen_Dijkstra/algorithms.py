@@ -47,7 +47,6 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
             if temp_distance < costs[edge.destination]:
                 came_from[edge.destination] = current
                 costs[edge.destination] = temp_distance
-
                 queue.put((costs[edge.destination], edge.destination))
 
     __reconstruct_path(came_from, destination, costs)
