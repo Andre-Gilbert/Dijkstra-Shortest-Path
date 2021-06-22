@@ -94,7 +94,9 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
                     for idx, tup in enumerate(heap):
                         if tup[1] == edge.destination and temp_distance < tup[0]:
                             heap[idx] = (temp_distance, tup[1])
-                            heapq.heapify(heap)
+
+                            if idx > 0 and temp_distance < heap[idx - 1][0]:
+                                heapq.heapify(heap)
 
     __reconstruct_path(came_from, destination, costs)
 
