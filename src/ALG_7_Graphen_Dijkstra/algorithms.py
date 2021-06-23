@@ -99,7 +99,7 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
                             if idx > 0 and temp_distance < heap[idx - 1][0]:"""
                     #heapq.heapify(heap)
 
-                    decrease_key(heap, edge, 1, current_distance)
+                    decrease_key(heap, edge, temp_distance, current_distance)
 
     reconstruct_path(came_from, destination, costs)
 
