@@ -80,6 +80,7 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
                 continue
 
             temp_distance = costs[current] + edge.cost
+            old_distance = costs[edge.destination]
 
             if temp_distance < costs[edge.destination]:
                 came_from[edge.destination] = current
@@ -97,6 +98,18 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
                             if idx > 0 and temp_distance < heap[idx - 1][0]:
                                 heapq.heapify(heap)
+                    # low, high = 0, len(heap) - 1
+
+                    # while low <= high:
+                    #     mid = (low + high) // 2
+
+                    #     if heap[mid][1] == edge.destination:
+                    #         heap[mid] = (temp_distance, edge.destination)
+                    #         break
+                    #     elif heap[mid][0] < old_distance:
+                    #         low = mid + 1
+                    #     else:
+                    #         high = mid - 1
 
     __reconstruct_path(came_from, destination, costs)
 
