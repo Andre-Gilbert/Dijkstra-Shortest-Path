@@ -10,12 +10,12 @@ Lazy implementation:
     priority queue.
 
 Eager implementation:
-    The eager version uses a heapq which avoids inserting duplicate key-value pairs.
+    The eager version avoids inserting duplicate key-value pairs.
 """
 import heapq
 from queue import PriorityQueue
 
-from data_structures import Graph, Vertex
+from data_structures import Edge, Graph, Vertex
 
 
 def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
@@ -49,7 +49,7 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
                 costs[edge.destination] = temp_distance
                 queue.put((costs[edge.destination], edge.destination))
 
-    __reconstruct_path(came_from, destination, costs)
+    reconstruct_path(came_from, destination, costs)
 
 
 def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
@@ -80,9 +80,9 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
                 continue
 
             temp_distance = costs[current] + edge.cost
-            old_distance = costs[edge.destination]
+            current_distance = costs[edge.destination]
 
-            if temp_distance < costs[edge.destination]:
+            if temp_distance < current_distance:
                 came_from[edge.destination] = current
                 costs[edge.destination] = temp_distance
 
@@ -92,29 +92,56 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
                 else:
                     # Since the heapq module doesn't support a decrease key method
                     # with O(1) lookup, we iterate over the heap in O(V) as a workaround.
-                    for idx, tup in enumerate(heap):
+                    """for idx, tup in enumerate(heap):
                         if tup[1] == edge.destination and temp_distance < tup[0]:
                             heap[idx] = (temp_distance, tup[1])
 
-                            if idx > 0 and temp_distance < heap[idx - 1][0]:
-                                heapq.heapify(heap)
-                    # low, high = 0, len(heap) - 1
+                            if idx > 0 and temp_distance < heap[idx - 1][0]:"""
+                    #heapq.heapify(heap)
 
-                    # while low <= high:
-                    #     mid = (low + high) // 2
+                    decrease_key(heap, edge, 1, current_distance)
 
-                    #     if heap[mid][1] == edge.destination:
-                    #         heap[mid] = (temp_distance, edge.destination)
-                    #         break
-                    #     elif heap[mid][0] < old_distance:
-                    #         low = mid + 1
-                    #     else:
-                    #         high = mid - 1
-
-    __reconstruct_path(came_from, destination, costs)
+    reconstruct_path(came_from, destination, costs)
 
 
-def __reconstruct_path(came_from: dict, current: Vertex, costs: dict) -> None:
+def decrease_key(heap: list[tuple[int, Vertex]], edge: Edge, temp: int, current: int) -> None:
+    """"""
+    low, high = 0, len(heap) - 1
+
+    while low <= high:
+        mid = (low + high) // 2
+
+        if heap[mid][1] == edge.destination:
+            heap[mid] = (temp, edge.destination)
+            break
+        elif heap[mid][0] < current:
+            low = mid + 1
+        else:
+            high = mid - 1
+
+    if mid != 0 and heap[mid] < heap[(mid - 1) >> 1]:
+        swim(heap, 0, mid)
+
+
+def swim(heap: list[tuple[int, Edge]], startpos: int, pos: int) -> None:
+    """"""
+    newitem = heap[pos]
+
+    while pos > startpos:
+        parentpos = (pos - 1) >> 1
+        parent = heap[parentpos]
+
+        if newitem < parent:
+            heap[pos] = parent
+            pos = parentpos
+            continue
+
+        break
+
+    heap[pos] = newitem
+
+
+def reconstruct_path(came_from: dict, current: Vertex, costs: dict) -> None:
     """Reconstructs the shortest path.
 
     Args:
