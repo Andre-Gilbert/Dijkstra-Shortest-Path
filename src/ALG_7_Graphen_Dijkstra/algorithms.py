@@ -42,11 +42,11 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
             if edge in visited:
                 continue
 
-            temp_distance = costs[current] + edge.cost
+            new_distance = costs[current] + edge.cost
 
-            if temp_distance < costs[edge.destination]:
+            if new_distance < costs[edge.destination]:
                 came_from[edge.destination] = current
-                costs[edge.destination] = temp_distance
+                costs[edge.destination] = new_distance
                 queue.put((costs[edge.destination], edge.destination))
 
     reconstruct_path(came_from, destination, costs)
@@ -79,12 +79,12 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
             if edge in visited:
                 continue
 
-            temp_distance = costs[current] + edge.cost
+            new_distance = costs[current] + edge.cost
             current_distance = costs[edge.destination]
 
-            if temp_distance < current_distance:
+            if new_distance < current_distance:
                 came_from[edge.destination] = current
-                costs[edge.destination] = temp_distance
+                costs[edge.destination] = new_distance
 
                 if edge.destination not in heap_vertices:
                     heap_vertices.add(edge.destination)
@@ -99,50 +99,62 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
                             if idx > 0 and temp_distance < heap[idx - 1][0]:"""
                     #heapq.heapify(heap)
 
-                    decrease_key(heap, edge, temp_distance, current_distance)
+                    decrease_key(heap, edge, new_distance, current_distance)
 
     reconstruct_path(came_from, destination, costs)
 
 
-def decrease_key(heap: list[tuple[int, Vertex]], edge: Edge, temp: int, current: int) -> None:
-    """"""
+def decrease_key(heap: list[tuple[int, Vertex]], edge: Edge, new_distance: int, current_distance: int) -> None:
+    """Decrease a value of a vertex given a edge.
+    
+    Args:
+        heap: An array of tuples containing the cost and vertex.
+        edge: The current edge we're considering.
+        new_distance: The new distance from vertex A to vertex B.
+        current_distance: The current distance from vertex A to vertex B.
+    """
     low, high = 0, len(heap) - 1
 
     while low <= high:
         mid = (low + high) // 2
 
         if heap[mid][1] == edge.destination:
-            heap[mid] = (temp, edge.destination)
+            heap[mid] = (new_distance, edge.destination)
             break
-        elif heap[mid][0] < current:
+        elif heap[mid][0] < current_distance:
             low = mid + 1
         else:
             high = mid - 1
 
-    if mid != 0 and heap[mid] < heap[(mid - 1) >> 1]:
-        swim(heap, 0, mid)
+    swim(heap, 0, mid)
 
 
-def swim(heap: list[tuple[int, Edge]], startpos: int, pos: int) -> None:
-    """"""
-    newitem = heap[pos]
+def swim(heap: list[tuple[int, Vertex]], start_position: int, position: int) -> None:
+    """Restore the heap invariant.
+    
+    Args:
+        heap: An array of tuples containing the cost and vertex.
+        start_position: The index of the root.
+        position: The index of the updated tuple.
+    """
+    new_item = heap[position]
 
-    while pos > startpos:
-        parentpos = (pos - 1) >> 1
-        parent = heap[parentpos]
+    while position > start_position:
+        parent_position = (position - 1) >> 1
+        parent = heap[parent_position]
 
-        if newitem < parent:
-            heap[pos] = parent
-            pos = parentpos
+        if new_item < parent:
+            heap[position] = parent
+            position = parent_position
             continue
 
         break
 
-    heap[pos] = newitem
+    heap[position] = new_item
 
 
 def reconstruct_path(came_from: dict, current: Vertex, costs: dict) -> None:
-    """Reconstructs the shortest path.
+    """Reconstruct the shortest path.
 
     Args:
         came_from: A dictionary containing the path to the destination.
