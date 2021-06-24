@@ -37,12 +37,14 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
     while not queue.empty():
         current = queue.get()[1]
 
+        #
         if current == destination:
             reconstruct_path(came_from, destination, costs)
             return
 
         visited.add(current)
 
+        # Check all neighbors
         for edge in current.adjacent_edges:
             if edge in visited: continue
             new_distance = costs[current] + edge.cost
@@ -81,6 +83,7 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
         visited.add(current)
         if costs[current] < min_value: continue
 
+        # Check all neighbors
         for edge in current.adjacent_edges:
             if edge in visited: continue
             new_cost = costs[current] + edge.cost
@@ -143,7 +146,7 @@ def swim(heap: list[tuple[int, Vertex]], start_position: int, position: int) -> 
     heap[position] = new_item
 
 
-def reconstruct_path(came_from: dict, current: Vertex, costs: dict) -> None:
+def reconstruct_path(came_from: dict[Vertex, Vertex], current: Vertex, costs: dict[int, Vertex]) -> None:
     """Reconstruct the shortest path.
 
     Args:
