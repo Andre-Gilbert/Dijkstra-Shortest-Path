@@ -90,15 +90,6 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
                     heap_vertices.add(edge.destination)
                     heappush(heap, (costs[edge.destination], edge.destination))
                 else:
-                    # Since the heapq module doesn't support a decrease key method
-                    # with O(1) lookup, we iterate over the heap in O(V) as a workaround.
-                    """for idx, tup in enumerate(heap):
-                        if tup[1] == edge.destination and temp_distance < tup[0]:
-                            heap[idx] = (temp_distance, tup[1])
-
-                            if idx > 0 and temp_distance < heap[idx - 1][0]:"""
-                    #heapq.heapify(heap)
-
                     decrease_key(heap, edge, new_distance, current_distance)
 
     reconstruct_path(came_from, destination, costs)
@@ -107,26 +98,21 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
 def decrease_key(heap: list[tuple[int, Vertex]], edge: Edge, new_distance: int, current_distance: int) -> None:
     """Decrease a value of a vertex given a edge.
 
+    Since the heapq module doesn't support a decrease key method
+    with O(1) lookup, we iterate over the heap in O(V) as a workaround.
+
     Args:
         heap: An array of tuples containing the cost and vertex.
         edge: The current edge we're considering.
         new_distance: The new distance from vertex A to vertex B.
         current_distance: The current distance from vertex A to vertex B.
     """
-    low, high = 0, len(heap) - 1
-
-    while low <= high:
-        mid = (low + high) // 2
-
-        if heap[mid][1] == edge.destination:
-            heap[mid] = (new_distance, edge.destination)
+    for idx, tup in enumerate(heap):
+        if heap[idx] == (current_distance, edge.destination):
+            heap[idx] = (new_distance, edge.destination)
             break
-        elif heap[mid][0] < current_distance:
-            low = mid + 1
-        else:
-            high = mid - 1
 
-    swim(heap, 0, mid)
+    swim(heap, 0, idx)
 
 
 def swim(heap: list[tuple[int, Vertex]], start_position: int, position: int) -> None:
