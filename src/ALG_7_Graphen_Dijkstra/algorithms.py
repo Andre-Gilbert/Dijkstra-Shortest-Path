@@ -12,7 +12,7 @@ Lazy implementation:
 Eager implementation:
     The eager version avoids inserting duplicate key-value pairs.
 """
-import heapq
+from heapq import heappop, heappush
 from queue import PriorityQueue
 
 from data_structures import Edge, Graph, Vertex
@@ -69,7 +69,7 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
     costs[start] = 0
 
     while heap:
-        idx, current = heapq.heappop(heap)
+        idx, current = heappop(heap)
         visited.add(current)
 
         if costs[current] < idx:
@@ -88,7 +88,7 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
                 if edge.destination not in heap_vertices:
                     heap_vertices.add(edge.destination)
-                    heapq.heappush(heap, (costs[edge.destination], edge.destination))
+                    heappush(heap, (costs[edge.destination], edge.destination))
                 else:
                     # Since the heapq module doesn't support a decrease key method
                     # with O(1) lookup, we iterate over the heap in O(V) as a workaround.
@@ -106,7 +106,7 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
 def decrease_key(heap: list[tuple[int, Vertex]], edge: Edge, new_distance: int, current_distance: int) -> None:
     """Decrease a value of a vertex given a edge.
-    
+
     Args:
         heap: An array of tuples containing the cost and vertex.
         edge: The current edge we're considering.
@@ -131,7 +131,7 @@ def decrease_key(heap: list[tuple[int, Vertex]], edge: Edge, new_distance: int, 
 
 def swim(heap: list[tuple[int, Vertex]], start_position: int, position: int) -> None:
     """Restore the heap invariant.
-    
+
     Args:
         heap: An array of tuples containing the cost and vertex.
         start_position: The index of the root.
