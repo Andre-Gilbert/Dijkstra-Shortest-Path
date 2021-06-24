@@ -49,7 +49,10 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
                 costs[edge.destination] = new_distance
                 queue.put((costs[edge.destination], edge.destination))
 
-    reconstruct_path(came_from, destination, costs)
+    if current == destination:
+        reconstruct_path(came_from, destination, costs)
+
+    reconstruct_path(came_from, current, costs)
 
 
 def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
@@ -92,7 +95,10 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
                 else:
                     decrease_key(heap, edge, new_distance, current_distance)
 
-    reconstruct_path(came_from, destination, costs)
+    if current == destination:
+        reconstruct_path(came_from, destination, costs)
+
+    reconstruct_path(came_from, current, costs)
 
 
 def decrease_key(heap: list[tuple[int, Vertex]], edge: Edge, new_distance: int, current_distance: int) -> None:
