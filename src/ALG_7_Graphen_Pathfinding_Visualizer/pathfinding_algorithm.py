@@ -47,8 +47,8 @@ class Pathfinder:
         visited = {self.__start}
         came_from = {}
 
-        distance = {vertex: float("inf") for row in self.__grid for vertex in row}
-        distance[self.__start] = 0
+        costs = {vertex: float("inf") for row in self.__grid for vertex in row}
+        costs[self.__start] = 0
 
         while not queue.empty():
             for event in pygame.event.get():
@@ -66,15 +66,15 @@ class Pathfinder:
 
             # Check all neighbors
             for neighbor in current.neighbors:
-                temp_distance = distance[current] + 1
+                new_cost = costs[current] + 1
 
-                if temp_distance < distance[neighbor]:
+                if new_cost < costs[neighbor]:
                     came_from[neighbor] = current
-                    distance[neighbor] = temp_distance
+                    costs[neighbor] = new_cost
 
                     if neighbor not in visited:
                         count += 1
-                        queue.put((distance[neighbor], count, neighbor))
+                        queue.put((costs[neighbor], count, neighbor))
                         visited.add(neighbor)
 
                         # Mark as visiting
@@ -128,13 +128,13 @@ class Pathfinder:
 
             # Check all neighbors
             for neighbor in current.neighbors:
-                temp_g_score = g_score[current] + 1
+                new_g_score = g_score[current] + 1
 
-                if temp_g_score < g_score[neighbor]:
+                if new_g_score < g_score[neighbor]:
                     came_from[neighbor] = current
-                    g_score[neighbor] = temp_g_score
-                    f_score[neighbor] = temp_g_score + self.__manhatten_distance(neighbor.get_position(),
-                                                                                 self.__destination.get_position())
+                    g_score[neighbor] = new_g_score
+                    f_score[neighbor] = new_g_score + self.__manhatten_distance(neighbor.get_position(),
+                                                                                self.__destination.get_position())
 
                     if neighbor not in open_set:
                         count += 1

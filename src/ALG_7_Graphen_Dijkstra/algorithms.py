@@ -36,21 +36,21 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
 
     while not queue.empty():
         current = queue.get()[1]
+
+        if current == destination:
+            reconstruct_path(came_from, destination, costs)
+            return
+
         visited.add(current)
 
         for edge in current.adjacent_edges:
-            if edge in visited:
-                continue
-
+            if edge in visited: continue
             new_distance = costs[current] + edge.cost
 
             if new_distance < costs[edge.destination]:
                 came_from[edge.destination] = current
                 costs[edge.destination] = new_distance
                 queue.put((costs[edge.destination], edge.destination))
-
-    if current == destination:
-        reconstruct_path(came_from, destination, costs)
 
     reconstruct_path(came_from, current, costs)
 
@@ -72,36 +72,34 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
     costs[start] = 0
 
     while heap:
-        idx, current = heappop(heap)
-        visited.add(current)
+        min_value, current = heappop(heap)
 
-        if costs[current] < idx:
-            continue
+        if current == destination:
+            reconstruct_path(came_from, destination, costs)
+            return
+
+        visited.add(current)
+        if costs[current] < min_value: continue
 
         for edge in current.adjacent_edges:
-            if edge in visited:
-                continue
+            if edge in visited: continue
+            new_cost = costs[current] + edge.cost
+            current_cost = costs[edge.destination]
 
-            new_distance = costs[current] + edge.cost
-            current_distance = costs[edge.destination]
-
-            if new_distance < current_distance:
+            if new_cost < current_cost:
                 came_from[edge.destination] = current
-                costs[edge.destination] = new_distance
+                costs[edge.destination] = new_cost
 
                 if edge.destination not in heap_vertices:
                     heap_vertices.add(edge.destination)
                     heappush(heap, (costs[edge.destination], edge.destination))
                 else:
-                    decrease_key(heap, edge, new_distance, current_distance)
-
-    if current == destination:
-        reconstruct_path(came_from, destination, costs)
+                    decrease_key(heap, edge, new_cost, current_cost)
 
     reconstruct_path(came_from, current, costs)
 
 
-def decrease_key(heap: list[tuple[int, Vertex]], edge: Edge, new_distance: int, current_distance: int) -> None:
+def decrease_key(heap: list[tuple[int, Vertex]], edge: Edge, new_cost: int, current_cost: int) -> None:
     """Decrease a value of a vertex given a edge.
 
     Since the heapq module doesn't support a decrease key method
@@ -110,12 +108,12 @@ def decrease_key(heap: list[tuple[int, Vertex]], edge: Edge, new_distance: int, 
     Args:
         heap: An array of tuples containing the cost and vertex.
         edge: The current edge we're considering.
-        new_distance: The new distance from vertex A to vertex B.
-        current_distance: The current distance from vertex A to vertex B.
+        new_cost: The new distance from vertex A to vertex B.
+        current_cost: The current distance from vertex A to vertex B.
     """
     for i in range(len(heap)):
-        if heap[i] == (current_distance, edge.destination):
-            heap[i] = (new_distance, edge.destination)
+        if heap[i] == (current_cost, edge.destination):
+            heap[i] = (new_cost, edge.destination)
             break
 
     swim(heap, 0, i)

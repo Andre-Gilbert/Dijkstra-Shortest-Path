@@ -53,14 +53,9 @@ if __name__ == "__main__":
 
     graph = Graph(vertices, edges)
 
-    start = time.time()
+    print("\nDijkstra Lazy Version:")
+    print("--------------------------")
     dijkstra_lazy(graph, v_a, v_e)
-    end = time.time()
-
-    print(f'Lazy Dijkstra took: {(end - start):.10f} s')
-
-    start = time.time()
+    print("\nDijkstra Eager Version:")
+    print("--------------------------")
     dijkstra_eager(graph, v_a, v_e)
-    end = time.time()
-
-    print(f'Eager Dijkstra took: {(end - start):.10f} s')
