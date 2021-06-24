@@ -107,12 +107,12 @@ def decrease_key(heap: list[tuple[int, Vertex]], edge: Edge, new_distance: int, 
         new_distance: The new distance from vertex A to vertex B.
         current_distance: The current distance from vertex A to vertex B.
     """
-    for idx, tup in enumerate(heap):
-        if heap[idx] == (current_distance, edge.destination):
-            heap[idx] = (new_distance, edge.destination)
+    for i in range(len(heap)):
+        if heap[i] == (current_distance, edge.destination):
+            heap[i] = (new_distance, edge.destination)
             break
 
-    swim(heap, 0, idx)
+    swim(heap, 0, i)
 
 
 def swim(heap: list[tuple[int, Vertex]], start_position: int, position: int) -> None:
