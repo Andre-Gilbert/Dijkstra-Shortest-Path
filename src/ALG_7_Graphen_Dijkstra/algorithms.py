@@ -47,11 +47,11 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
         # Check all neighbors
         for edge in current.adjacent_edges:
             if edge in visited: continue
-            new_distance = costs[current] + edge.cost
+            new_cost = costs[current] + edge.cost
 
-            if new_distance < costs[edge.destination]:
+            if new_cost < costs[edge.destination]:
                 came_from[edge.destination] = current
-                costs[edge.destination] = new_distance
+                costs[edge.destination] = new_cost
                 queue.put((costs[edge.destination], edge.destination))
 
     reconstruct_path(came_from, current, costs)
