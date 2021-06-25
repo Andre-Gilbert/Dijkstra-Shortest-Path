@@ -98,7 +98,7 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
                     heap_vertices.add(edge.destination)
                     heappush(heap, (costs[edge.destination], edge.destination))
                 else:
-                    decrease_key(heap, edge, new_cost, current_cost)
+                    decrease_key(heap, edge, costs[edge.destination], current_cost)
 
     reconstruct_path(came_from, current, costs)
 
