@@ -54,8 +54,8 @@ if __name__ == "__main__":
     graph = Graph(vertices, edges)
 
     print("\nDijkstra Lazy Version:")
-    print("--------------------------")
+    print("-" * 31)
     dijkstra_lazy(graph, v_a, v_e)
     print("\nDijkstra Eager Version:")
-    print("--------------------------")
+    print("-" * 31)
     dijkstra_eager(graph, v_a, v_e)
