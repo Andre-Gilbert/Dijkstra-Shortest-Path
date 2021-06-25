@@ -58,7 +58,7 @@ class Pathfinder:
             current = queue.get()[2]
             visited.remove(current)
 
-            # Reconstruct path
+            # Destinaton reached
             if current == self.__destination:
                 self.__reconstruct_path(gui, came_from, self.__destination)
                 self.__start.make_start()
@@ -81,7 +81,7 @@ class Pathfinder:
                         if neighbor != self.__destination:
                             neighbor.make_visiting()
 
-            # Redraw the gui
+            # Update gui
             gui.draw(self.__grid)
 
             # Mark as visited
@@ -120,7 +120,7 @@ class Pathfinder:
             current = queue.get()[2]
             open_set.remove(current)
 
-            # Reconstruct path
+            # Destinaton reached
             if current == self.__destination:
                 self.__reconstruct_path(gui, came_from, self.__destination)
                 self.__start.make_start()
@@ -145,7 +145,7 @@ class Pathfinder:
                         if neighbor != self.__destination:
                             neighbor.make_visiting()
 
-            # Redraw the grid
+            # Update gui
             gui.draw(self.__grid)
 
             # Mark as visited

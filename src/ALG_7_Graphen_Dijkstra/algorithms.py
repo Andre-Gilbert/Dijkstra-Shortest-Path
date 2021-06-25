@@ -37,7 +37,7 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
     while not queue.empty():
         current = queue.get()[1]
 
-        #
+        # Destinaton reached
         if current == destination:
             reconstruct_path(came_from, destination, costs)
             return
@@ -76,6 +76,7 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
     while heap:
         min_value, current = heappop(heap)
 
+        # Destinaton reached
         if current == destination:
             reconstruct_path(came_from, destination, costs)
             return
