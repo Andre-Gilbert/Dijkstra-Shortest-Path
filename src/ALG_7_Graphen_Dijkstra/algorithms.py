@@ -53,7 +53,7 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
                 costs[edge.destination] = new_cost
                 queue.put((costs[edge.destination], edge.destination))
 
-    reconstruct_path(came_from, current, costs)
+    print(f'No path from {start.name} to {destination.name} was found.')
 
 
 def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
@@ -99,7 +99,7 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
                 else:
                     decrease_key(heap, edge, costs[edge.destination], current_cost)
 
-    reconstruct_path(came_from, current, costs)
+    print(f'No path from {start.name} to {destination.name} was found.')
 
 
 def decrease_key(heap: list[tuple[int, Vertex]], edge: Edge, new_cost: int, current_cost: int) -> None:
