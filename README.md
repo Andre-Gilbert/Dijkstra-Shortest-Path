@@ -11,8 +11,8 @@ The OG pathfinding algorithm which guarantees the shortest path.
 Arguably the best pathfinding algorithm which uses heuristics to guarantee the shortest path much faster than Dijkstra's Shortest Path.
 
 ## File Structure
-[Algorithm Implemenatation](src/ALG_7_Graphen_Dijkstra)
-[Pathfinding Visualizer](src/ALG_7_Graphen_Pathfinding_Visualizer)
+- [Algorithm Implementation](src/ALG_7_Graphen_Dijkstra)
+- [Pathfinding Visualizer](src/ALG_7_Graphen_Pathfinding_Visualizer)
 
 ## Pathfinding Visualizer Usage
 
