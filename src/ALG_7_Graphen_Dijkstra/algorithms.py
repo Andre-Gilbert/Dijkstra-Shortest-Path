@@ -28,7 +28,6 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
     """
     queue = PriorityQueue()
     queue.put((0, start))
-    visited = set()
     came_from = {}
 
     costs = dict.fromkeys(graph.vertices, float('inf'))
@@ -42,11 +41,11 @@ def dijkstra_lazy(graph: Graph, start: Vertex, destination: Vertex) -> None:
             reconstruct_path(came_from, destination, costs)
             return
 
-        visited.add(current)
+        current.visited = True
 
         # Check all neighbors
         for edge in current.adjacent_edges:
-            if edge in visited: continue
+            if edge.destination.visited: continue
             new_cost = costs[current] + edge.cost
 
             if new_cost < costs[edge.destination]:
@@ -67,7 +66,6 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
     """
     heap = [(0, start)]
     heap_vertices = set()
-    visited = set()
     came_from = {}
 
     costs = dict.fromkeys(graph.vertices, float('inf'))
@@ -81,12 +79,13 @@ def dijkstra_eager(graph: Graph, start: Vertex, destination: Vertex) -> None:
             reconstruct_path(came_from, destination, costs)
             return
 
-        visited.add(current)
+        current.visited = True
+
         if costs[current] < min_value: continue
 
         # Check all neighbors
         for edge in current.adjacent_edges:
-            if edge in visited: continue
+            if edge.destination.visited: continue
             new_cost = costs[current] + edge.cost
             current_cost = costs[edge.destination]
 

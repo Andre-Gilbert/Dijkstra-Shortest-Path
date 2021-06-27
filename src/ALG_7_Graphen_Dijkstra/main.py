@@ -25,8 +25,6 @@ Typical usage example:
     dijkstra_lazy(graph, v_a, v_e)
     dijkstra_eager(graph, v_a, v_e)
 """
-import time
-
 from algorithms import dijkstra_eager, dijkstra_lazy
 from data_structures import Edge, Graph, Vertex
 
@@ -56,6 +54,11 @@ if __name__ == "__main__":
     print("\nDijkstra Lazy Version:")
     print("-" * 31)
     dijkstra_lazy(graph, v_a, v_e)
+
+    # Reset visited vertices
+    for vertex in graph.vertices:
+        vertex.visited = False
+
     print("\nDijkstra Eager Version:")
     print("-" * 31)
     dijkstra_eager(graph, v_a, v_e)
