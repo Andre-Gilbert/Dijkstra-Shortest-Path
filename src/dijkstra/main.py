@@ -37,8 +37,7 @@ Typical usage example:
 from algorithms import dijkstra_eager, dijkstra_lazy
 from data_structures import Edge, Graph, Vertex
 
-# Example usage
-if __name__ == "__main__":
+if __name__ == '__main__':
     v_a = Vertex('A')
     v_b = Vertex('B')
     v_c = Vertex('C')

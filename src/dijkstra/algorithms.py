@@ -14,7 +14,6 @@ Eager implementation:
 """
 from heapq import heappop, heappush
 from queue import PriorityQueue
-
 from data_structures import Edge, Graph, Vertex
 
 

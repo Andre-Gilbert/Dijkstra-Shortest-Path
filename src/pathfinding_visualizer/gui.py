@@ -4,99 +4,184 @@ The GUI handles mouse and keyboard events such as:
 - Left click to create the start, destination and walls
 - Right click to undo a vertex
 - Press c to reset all vertices
-- Press a to start the A* search algorithm
-- Press d to start Dijkstra's shortest path algorithm
 - Press m to generate a random maze
+- Press 1 to visualize Dijkstra's algorithm
+- Press 2 to visualize A* search
+- Press 3 to visualize Bidirectional search
+- Press 4 to visualize Breadth-first search
+- Press 5 to visualize Depth-first search
 """
 import pygame
-
-from pathfinding_algorithm import Pathfinder
+from random import randrange
+from pathfinder import Pathfinder
 from vertex import Vertex
+from utils import Algorithms, Colors
 
 
 class GUI:
     """Class which implements the user interface.
 
     Attributes:
-        __gap: The width of a node.
-        __rows: The number of rows of the grid.
-        __cols: The number of columns of the grid.
-        __width: The width of the interface.
-        __window: The graphical user interface.
+        _pathfinder: The pathfinder object used to run the algorithms.
+        _gap: The width of a vertex.
+        _rows: The number of rows of the grid.
+        _cols: The number of columns of the grid.
+        _width: The width of the interface.
+        _window: The graphical user interface.
     """
-    __LIGHT_BLUE = (175, 216, 248)
 
-    def __init__(self, rows: int, width: int) -> None:
+    def __init__(self, rows: int = 50, width: int = 700) -> None:
         """Initializes the graphical user interface.
+
+        Args:
+            rows: The number of rows of the grid.
+            width: The width of the window.
 
         Raises:
             TypeError: If rows or width are not of type int.
         """
         if not isinstance(rows, int) or not isinstance(width, int):
-            raise TypeError("Inputs must be integers.")
+            raise TypeError('Inputs must be integers.')
 
-        self.__gap = width // rows
-        self.__rows = rows
-        self.__cols = rows
-        self.__width = width
-        self.__window = pygame.display.set_mode((width, width))
+        self._pathfinder = Pathfinder()
+        self._gap = width // rows
+        self._rows = rows
+        self._cols = rows
+        self._width = width
+        self._window = pygame.display.set_mode((width, width))
+
         pygame.display.set_caption("Pathfinding Visualizer")
 
-    def __initialize_grid(self) -> list[list[Vertex]]:
-        """Initializes an empty grid.
-
-        Returns:
-            A 2D array containing all vertices in the grid.
-        """
+    def _initialize_grid(self) -> list[list[Vertex]]:
+        """Initializes an empty grid."""
         grid = []
-
-        for row in range(self.__rows):
+        for row in range(self._rows):
             grid.append([])
-
-            for col in range(self.__cols):
-                grid[row].append(Vertex(row, col, self.__gap, self.__rows))
+            for col in range(self._cols):
+                grid[row].append(Vertex(row, col, self._gap, self._rows))
 
         return grid
 
+    def _generate_maze(
+        self,
+        grid: list[list[Vertex]],
+        start: Vertex,
+        destination: Vertex,
+        threshold: float = 0.3,
+    ) -> list[list[Vertex]]:
+        """Generates a random maze."""
+        n = round(len(grid) * len(grid) * threshold)
+        for _ in range(n + 1):
+            row = randrange(len(grid))
+            col = randrange(len(grid))
+            if grid[row][col] != start and grid[row][col] != destination:
+                grid[row][col].make_wall()
+
     def draw(self, grid: list[list[Vertex]]) -> None:
-        """Draw the vertices.
-
-        Args:
-            grid: The grid containing all vertices.
-        """
+        """Draws the vertices."""
         for row in grid:
-            for node in row:
-                node.draw(self.__window)
+            for vertex in row:
+                vertex.draw(self._window)
 
-        self.__draw_lines()
+        self._draw_lines()
         pygame.display.update()
 
-    def __draw_lines(self) -> None:
-        """Draw the grid lines."""
-        for i in range(self.__rows):
-            pygame.draw.line(self.__window, self.__LIGHT_BLUE, (0, i * self.__gap), (self.__width, i * self.__gap))
-            pygame.draw.line(self.__window, self.__LIGHT_BLUE, (i * self.__gap, 0), (i * self.__gap, self.__width))
+    def _draw_lines(self) -> None:
+        """Draws the grid lines."""
+        for i in range(self._rows):
+            pygame.draw.line(self._window, Colors.LIGHT_BLUE, (0, i * self._gap), (self._width, i * self._gap))
+            pygame.draw.line(self._window, Colors.LIGHT_BLUE, (i * self._gap, 0), (i * self._gap, self._width))
 
-    def __get_clicked_position(self, position: tuple[int, int]) -> tuple[int, int]:
-        """Get the clicked position.
-
-        Args:
-            position: x-, y-Coordinate of the position.
-
-        Returns:
-            The row and column of the vertex.
-        """
+    def _get_clicked_position(self, position: tuple[int, int]) -> tuple[int, int]:
+        """Gets the clicked position."""
         x, y = position
-        row, col = x // self.__gap, y // self.__gap
+        row = x // self._gap
+        col = y // self._gap
         return row, col
 
+    def _make_vertex(
+        self,
+        grid: list[list[Vertex]],
+        start: Vertex,
+        destination: Vertex,
+    ) -> tuple[Vertex, Vertex, list[list[Vertex]]]:
+        """Creates the start, destination or a wall vertex."""
+        position = pygame.mouse.get_pos()
+        row, col = self._get_clicked_position(position)
+        vertex = grid[row][col]
+
+        if not start and vertex != destination and not vertex.is_wall():
+            start = vertex
+            start.make_start()
+        elif not destination and vertex != start and not vertex.is_wall():
+            destination = vertex
+            destination.make_destination()
+        elif vertex != start and vertex != destination:
+            vertex.make_wall()
+
+        return grid, start, destination
+
+    def _reset_vertex(
+        self,
+        grid: list[list[Vertex]],
+        start: Vertex,
+        destination: Vertex,
+    ) -> tuple[Vertex, Vertex, list[list[Vertex]]]:
+        """Resets the start, destination or a wall vertex."""
+        position = pygame.mouse.get_pos()
+        row, col = self._get_clicked_position(position)
+        vertex = grid[row][col]
+        vertex.reset_vertex()
+
+        if vertex == start:
+            start = None
+        elif vertex == destination:
+            destination = None
+
+        return grid, start, destination
+
+    def _reset_vertices(self, grid: list[list[Vertex]], is_maze: bool = False) -> None:
+        """Resets all vertices by coloring them white."""
+        for row in grid:
+            for vertex in row:
+                if vertex.is_visited() or vertex.is_path():
+                    vertex.reset_vertex()
+                elif is_maze and vertex.is_wall():
+                    vertex.reset_vertex()
+
+    def _update_neighbors(self, grid: list[list[Vertex]]) -> None:
+        """Updates the neighbor vertices."""
+        for row in grid:
+            for vertex in row:
+                vertex.update_neighbors(grid)
+
+    def _visualize_algorithm(
+        self,
+        grid: list[list[Vertex]],
+        start: Vertex,
+        destination: Vertex,
+        algorithm: Algorithms,
+    ) -> None:
+        """Visualizes a pathfinding algorithm."""
+        self._reset_vertices(grid)
+        self._update_neighbors(grid)
+
+        if algorithm == Algorithms.DIJKTRA:
+            self._pathfinder.dijkstra(self, grid, start, destination)
+        elif algorithm == Algorithms.A_STAR_SEARCH:
+            self._pathfinder.a_star_search(self, grid, start, destination)
+        elif algorithm == Algorithms.BIDIRECTIONAL_SEARCH:
+            self._pathfinder.bidirectional_search(self, grid, start, destination)
+        elif algorithm == Algorithms.BREADTH_FIRST_SEARCH:
+            self._pathfinder.breadth_first_search(self, grid, start, destination)
+        elif algorithm == Algorithms.DEPTH_FIRST_SEARCH:
+            self._pathfinder.depth_first_search(self, grid, start, destination)
+
     def run(self) -> None:
-        """Main loop of the gui."""
-        count = 0
+        """Runs the pathfinding visualizer."""
         run = True
-        started = False
         start = destination = None
-        grid = self.__initialize_grid()
+        grid = self._initialize_grid()
 
         while run:
             self.draw(grid)
@@ -108,96 +193,43 @@ class GUI:
 
                 # Left click
                 if pygame.mouse.get_pressed()[0]:
-                    position = pygame.mouse.get_pos()
-                    row, col = self.__get_clicked_position(position)
-                    node = grid[row][col]
-
-                    if not start and node != destination and not node.is_wall():
-                        start = node
-                        start.make_start()
-
-                    elif not destination and node != start and not node.is_wall():
-                        destination = node
-                        destination.make_destination()
-
-                    elif node != start and node != destination:
-                        node.make_wall()
+                    grid, start, destination = self._make_vertex(grid, start, destination)
 
                 # Right click
-                elif pygame.mouse.get_pressed()[2]:
-                    position = pygame.mouse.get_pos()
-                    row, col = self.__get_clicked_position(position)
-                    node = grid[row][col]
-                    node.reset_vertex()
-
-                    if node == start:
-                        start = None
-
-                    if node == destination:
-                        destination = None
-
-                # Initialize the pathfinder
-                pathfinder = Pathfinder(grid, start, destination)
+                if pygame.mouse.get_pressed()[2]:
+                    grid, start, destination = self._reset_vertex(grid, start, destination)
 
                 if event.type == pygame.KEYDOWN:
 
-                    # Dijkstra's shortest path
-                    if event.key == pygame.K_d and not started and start and destination:
-                        started = True
-
-                        if count > 0:
-                            for row in grid:
-                                for vertex in row:
-                                    if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
-                                        vertex.reset_vertex()
-
-                        for row in grid:
-                            for vertex in row:
-                                vertex.update_neighbors(grid)
-
-                        pathfinder.dijkstra(self)
-                        count += 1
-                        started = False
+                    # Dijkstra's algorithm
+                    if event.key == pygame.K_1 and start and destination:
+                        self._visualize_algorithm(grid, start, destination, Algorithms.DIJKTRA)
 
                     # A* search algorithm
-                    elif event.key == pygame.K_a and not started and start and destination:
-                        started = True
+                    elif event.key == pygame.K_2 and start and destination:
+                        self._visualize_algorithm(grid, start, destination, Algorithms.A_STAR_SEARCH)
 
-                        if count > 0:
-                            for row in grid:
-                                for vertex in row:
-                                    if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
-                                        vertex.reset_vertex()
+                    # Bidirectional search
+                    elif event.key == pygame.K_3 and start and destination:
+                        self._visualize_algorithm(grid, start, destination, Algorithms.BIDIRECTIONAL_SEARCH)
 
-                        for row in grid:
-                            for vertex in row:
-                                vertex.update_neighbors(grid)
+                    # Breath-first search
+                    elif event.key == pygame.K_4 and start and destination:
+                        self._visualize_algorithm(grid, start, destination, Algorithms.BREADTH_FIRST_SEARCH)
 
-                        pathfinder.a_star_search(self)
-                        count += 1
-                        started = False
+                    # Depth-first search
+                    elif event.key == pygame.K_5 and start and destination:
+                        self._visualize_algorithm(grid, start, destination, Algorithms.DEPTH_FIRST_SEARCH)
 
                     # Generate maze
-                    elif event.key == pygame.K_m and not started:
-                        if count > 0:
-                            for row in grid:
-                                for vertex in row:
-                                    if vertex.is_visited() or vertex.is_visiting() or vertex.is_path():
-                                        vertex.reset_vertex()
-
-                        for row in grid:
-                            for vertex in row:
-                                if vertex.is_wall():
-                                    vertex.reset_vertex()
-
-                        pathfinder.generate_maze()
+                    elif event.key == pygame.K_m:
+                        self._reset_vertices(grid, True)
+                        self._generate_maze(grid, start, destination)
 
                     # Reset grid
                     elif event.key == pygame.K_c:
-                        count = 0
-                        started = False
                         start = destination = None
-                        grid = self.__initialize_grid()
+                        grid = self._initialize_grid()
                         self.draw(grid)
 
         pygame.quit()

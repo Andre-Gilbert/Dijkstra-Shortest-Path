@@ -4,25 +4,37 @@ This repository's goal is to demonstrate how to implement pathfinding algorithms
 
 ## Meet the Algorithms
 
-**Dijkstra Shortest Path** (weighted): <br/>
+**Dijkstra Algorithm** (weighted): <br/>
 The OG pathfinding algorithm which guarantees the shortest path.
 
-<b>A\* Search Algorithm</b> (weighted): <br/>
-Arguably the best pathfinding algorithm which uses heuristics to guarantee the shortest path much faster than Dijkstra's Shortest Path.
+**A\* Search** (weighted): <br/>
+Arguably the best pathfinding algorithm which uses heuristics to guarantee the shortest path much faster than Dijkstra's algorithm.
+
+**Bidirectional Search** (unweighted): <br/>
+Runs Breadth-first search from both sides. Does guarantee the shortest path.
+
+**Breadth-first search** (unweighted): <br/>
+A great algorithm for pathfinding. Does guarantee the shortest path.
+
+**Depth-first search** (unweighted): <br/>
+An awful algorithm for pathfinding. Does not guarantee the shortest path.
 
 ## Pathfinding Visualizer Usage
 
-- Left click to set the start, destination and walls
+- Left click to create the start, destination and walls
 - Right click to undo a vertex
-- Press **c** to reset all vertices
-- Press **a** to start the A\* search algorithm
-- Press **d** to start Dijkstra's shortest path algorithm
-- Press **m** to generate a random maze
+- Press c to reset all vertices
+- Press m to generate a random maze
+- Press 1 to visualize Dijkstra's algorithm
+- Press 2 to visualize A* search
+- Press 3 to visualize Bidirectional search
+- Press 4 to visualize Breadth-first search
+- Press 5 to visualize Depth-first search
 
 ## Requirements
 
-- python >= 3.9
-- pygame
+- python >= 3.10
+- View [requirements](requirements.txt).
 
 ## License
 
