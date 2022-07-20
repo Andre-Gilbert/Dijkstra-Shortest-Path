@@ -52,10 +52,13 @@ class Path:
         current_src = intersection
         current_dst = intersection
         while current_src in came_from_src or current_dst in came_from_dst:
-            current_src = came_from_src[current_src] if current_src else None
-            current_src.make_path()
-            current_dst = came_from_dst[current_dst] if current_dst else None
-            current_dst.make_path()
+            if current_src:
+                current_src = came_from_src[current_src]
+                current_src.make_path()
+            if current_dst:
+                current_dst = came_from_dst[current_dst]
+                current_dst.make_path()
+                
             gui.draw(grid)
 
 
