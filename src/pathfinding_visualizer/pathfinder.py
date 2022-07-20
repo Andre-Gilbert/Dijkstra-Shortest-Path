@@ -1,7 +1,7 @@
 """Pathfinder implements the pathfinding algorithms.
 
 Given a grid, the start, and destination vertex
-the shortest path can be found using these algorithms:
+a path from start to destination can be found using these algorithms:
 - Dijkstra's algorithm
 - A* search algorithm
 - Bidirectional search
@@ -191,5 +191,3 @@ class Pathfinder:
             gui.draw(grid)
 
         return False
-
-
