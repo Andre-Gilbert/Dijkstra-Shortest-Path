@@ -70,7 +70,9 @@ class GUI:
         threshold: float = 0.3,
     ) -> list[list[Vertex]]:
         """Generates a random maze."""
+        self._reset_vertices(grid, True)
         n = round(len(grid) * len(grid) * threshold)
+
         for _ in range(n + 1):
             row = randrange(len(grid))
             col = randrange(len(grid))
@@ -104,7 +106,7 @@ class GUI:
         grid: list[list[Vertex]],
         start: Vertex,
         destination: Vertex,
-    ) -> tuple[Vertex, Vertex, list[list[Vertex]]]:
+    ) -> tuple[list[list[Vertex]], Vertex, Vertex]:
         """Creates the start, destination or a wall vertex."""
         position = pygame.mouse.get_pos()
         row, col = self._get_clicked_position(position)
@@ -126,7 +128,7 @@ class GUI:
         grid: list[list[Vertex]],
         start: Vertex,
         destination: Vertex,
-    ) -> tuple[Vertex, Vertex, list[list[Vertex]]]:
+    ) -> tuple[list[list[Vertex]], Vertex, Vertex]:
         """Resets the start, destination or a wall vertex."""
         position = pygame.mouse.get_pos()
         row, col = self._get_clicked_position(position)
@@ -223,7 +225,6 @@ class GUI:
 
                     # Generate maze
                     elif event.key == pygame.K_m:
-                        self._reset_vertices(grid, True)
                         self._generate_maze(grid, start, destination)
 
                     # Reset grid
