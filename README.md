@@ -36,6 +36,13 @@ An awful algorithm for pathfinding. Does not guarantee the shortest path.
 - python >= 3.10
 - View [requirements](requirements.txt).
 
+## Running the Application
+
+To run the application:
+```bash
+python src/pathfinding_visualizer/main.py
+```
+
 ## License
 
 This repository is released under the [MIT license](https://opensource.org/licenses/MIT). In short, this means you are free to use this software in any personal, open-source or commercial projects. Attribution is optional but appreciated.
