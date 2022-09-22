@@ -36,14 +36,7 @@ class GUI:
         Args:
             rows: The number of rows of the grid.
             width: The width of the window.
-
-        Raises:
-            TypeError: If rows or width are not of type int.
         """
-        if not isinstance(rows, int) or not isinstance(width, int):
-            raise TypeError('Inputs must be integers.')
-
-        self._pathfinder = Pathfinder()
         self._gap = width // rows
         self._rows = rows
         self._cols = rows
@@ -169,15 +162,15 @@ class GUI:
         self._update_neighbors(grid)
 
         if algorithm == Algorithms.DIJKTRA:
-            self._pathfinder.dijkstra(self, grid, start, destination)
+            Pathfinder.dijkstra(self, grid, start, destination)
         elif algorithm == Algorithms.A_STAR_SEARCH:
-            self._pathfinder.a_star_search(self, grid, start, destination)
+            Pathfinder.a_star_search(self, grid, start, destination)
         elif algorithm == Algorithms.BIDIRECTIONAL_SEARCH:
-            self._pathfinder.bidirectional_search(self, grid, start, destination)
+            Pathfinder.bidirectional_search(self, grid, start, destination)
         elif algorithm == Algorithms.BREADTH_FIRST_SEARCH:
-            self._pathfinder.breadth_first_search(self, grid, start, destination)
+            Pathfinder.breadth_first_search(self, grid, start, destination)
         elif algorithm == Algorithms.DEPTH_FIRST_SEARCH:
-            self._pathfinder.depth_first_search(self, grid, start, destination)
+            Pathfinder.depth_first_search(self, grid, start, destination)
 
     def run(self) -> None:
         """Runs the pathfinding visualizer."""

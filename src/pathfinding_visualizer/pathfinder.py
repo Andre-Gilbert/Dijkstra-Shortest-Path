@@ -17,7 +17,8 @@ from utils import AStarSearch, BidirectionalSearch, Path
 class Pathfinder:
     """Class which implements the pathfinding algorithms."""
 
-    def dijkstra(self, gui: object, grid: list[list[Vertex]], start: Vertex, destination: Vertex) -> bool:
+    @staticmethod
+    def dijkstra(gui: object, grid: list[list[Vertex]], start: Vertex, destination: Vertex) -> bool:
         """Visualizes Dijkstra's algorithm."""
         count = 0
         queue = PriorityQueue()
@@ -57,7 +58,8 @@ class Pathfinder:
 
         return False
 
-    def a_star_search(self, gui: object, grid: list[list[Vertex]], start: Vertex, destination: Vertex) -> bool:
+    @staticmethod
+    def a_star_search(gui: object, grid: list[list[Vertex]], start: Vertex, destination: Vertex) -> bool:
         """Visualizes A* search."""
         count = 0
         queue = PriorityQueue()
@@ -100,7 +102,8 @@ class Pathfinder:
 
         return False
 
-    def bidirectional_search(self, gui: object, grid: list[list[Vertex]], start: Vertex, destination: Vertex) -> bool:
+    @staticmethod
+    def bidirectional_search(gui: object, grid: list[list[Vertex]], start: Vertex, destination: Vertex) -> bool:
         """Visualizes bidirectional search."""
         queue_src = deque()
         queue_src.append(start)
@@ -126,7 +129,8 @@ class Pathfinder:
 
         return False
 
-    def breadth_first_search(self, gui: object, grid: list[list[Vertex]], start: Vertex, destination: Vertex) -> bool:
+    @staticmethod
+    def breadth_first_search(gui: object, grid: list[list[Vertex]], start: Vertex, destination: Vertex) -> bool:
         """Visualizes breadth-first search."""
         queue = deque()
         queue.append(start)
@@ -159,7 +163,8 @@ class Pathfinder:
 
         return False
 
-    def depth_first_search(self, gui: object, grid: list[list[Vertex]], start: Vertex, destination: Vertex) -> bool:
+    @staticmethod
+    def depth_first_search(gui: object, grid: list[list[Vertex]], start: Vertex, destination: Vertex) -> bool:
         """Visualizes depth-first search."""
         stack = []
         stack.append(start)
